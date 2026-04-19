@@ -430,6 +430,7 @@ button:active {
 .tutorial-content {
     position: relative;
     max-width: 600px;
+    width: 90%;
     max-height: 90vh;
     overflow-y: auto;
 }
@@ -583,5 +584,26 @@ button:active {
 
     .tutorial-step p {
         font-size: 14px;
+    }
+
+    .tutorial-content {
+        width: 95%;
+        padding: 32px 20px;
+    }
+
+    .tutorial-navigation {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .tutorial-navigation button {
+        width: 100%;
+        padding: 14px 20px;
+        min-width: auto;
+    }
+
+    #step-indicator {
+        order: -1;
+        margin-bottom: 8px;
     }
 }
