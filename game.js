@@ -78,6 +78,11 @@ function setupWelcomeScreen() {
     document.getElementById('player-name').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') startGame();
     });
+
+    // Tutorial button
+    document.getElementById('how-to-play-button').addEventListener('click', () => {
+        openTutorial();
+    });
 }
 
 function startGame() {

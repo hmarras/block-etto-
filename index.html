@@ -29,6 +29,8 @@
             </div>
         </div>
 
+        <button id="how-to-play-button" style="margin-top: 24px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;">❓ Come funziona</button>
+
         <p style="color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 48px;">by Dario Marras</p>
     </div>
 
@@ -54,6 +56,24 @@
         </div>
     </div>
 
+    <!-- How To Play Tutorial Modal -->
+    <div id="tutorial-modal" style="display:none">
+        <div class="modal-content tutorial-content">
+            <button id="close-tutorial" style="position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 24px; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">×</button>
+
+            <div id="tutorial-step" class="tutorial-step">
+                <!-- Step content will be injected by JavaScript -->
+            </div>
+
+            <div class="tutorial-navigation">
+                <button id="prev-step" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">← Indietro</button>
+                <span id="step-indicator" style="color: rgba(255,255,255,0.8); font-size: 14px;"></span>
+                <button id="next-step" style="background: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">Avanti →</button>
+            </div>
+        </div>
+    </div>
+
     <script src="game.js"></script>
+    <script src="tutorial.js"></script>
 </body>
 </html>
