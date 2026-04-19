@@ -137,8 +137,17 @@ const tutorialSteps = [
                         ${Array(36).fill(0).map((_, i) => {
                             const row = Math.floor(i / 6);
                             const col = i % 6;
-                            // Griglia quasi piena con spazi sparsi
-                            const isEmpty = (row === 1 && col === 1) || (row === 3 && col === 4) || (row === 5 && col === 0);
+                            // Griglia quasi piena ma senza righe/colonne complete
+                            // Pattern a scacchiera disordinato per evitare linee complete
+                            const isEmpty =
+                                (row === 0 && col === 1) ||
+                                (row === 1 && col === 3) ||
+                                (row === 2 && col === 0) ||
+                                (row === 2 && col === 4) ||
+                                (row === 3 && col === 2) ||
+                                (row === 4 && col === 5) ||
+                                (row === 5 && col === 1) ||
+                                (row === 5 && col === 3);
                             return `<div class="tutorial-cell ${!isEmpty ? 'filled' : ''}"></div>`;
                         }).join('')}
                     </div>
