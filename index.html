@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Block Blast</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen">
+        <h1>🎮 Block Blast</h1>
+        <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin-bottom: 32px; text-align: center;">
+            Piazza i blocchi, completa le linee, fai il record!
+        </p>
+        <input type="text" id="player-name" placeholder="Il tuo nome" maxlength="20">
+        <button id="start-button">🚀 Inizia Gioco</button>
+
+        <!-- Color Theme Selector -->
+        <div style="margin-top: 40px;">
+            <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin-bottom: 12px;">🎨 Scegli il colore:</p>
+            <div id="color-selector" style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <button class="color-btn" data-theme="purple" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></button>
+                <button class="color-btn" data-theme="pink" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></button>
+                <button class="color-btn" data-theme="blue" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></button>
+                <button class="color-btn" data-theme="green" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></button>
+                <button class="color-btn" data-theme="orange" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></button>
+                <button class="color-btn" data-theme="dark" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" style="display:none">
+        <div class="header">
+            <div>Giocatore: <span id="current-player"></span></div>
+            <div>Punteggio: <span id="current-score">0</span></div>
+            <div>Record: <span id="best-score">0</span></div>
+        </div>
+
+        <div id="grid"></div>
+        <div id="pieces"></div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" style="display:none">
+        <div class="modal-content">
+            <h2 id="game-over-message"></h2>
+            <p id="final-score"></p>
+            <div id="piece-stats"></div>
+            <button id="play-again-button">Gioca Ancora</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
