@@ -13,30 +13,44 @@ body {
     -webkit-user-select: none;
     user-select: none;
     transition: background 0.5s ease;
+    --block-color-start: #ffd700;
+    --block-color-end: #ffed4e;
 }
 
 body.theme-purple {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --block-color-start: #ffd700;
+    --block-color-end: #ffed4e;
 }
 
 body.theme-pink {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --block-color-start: #43e97b;
+    --block-color-end: #38f9d7;
 }
 
 body.theme-blue {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --block-color-start: #ff6b6b;
+    --block-color-end: #ffa500;
 }
 
 body.theme-green {
     background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --block-color-start: #f093fb;
+    --block-color-end: #f5576c;
 }
 
 body.theme-orange {
     background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --block-color-start: #667eea;
+    --block-color-end: #764ba2;
 }
 
 body.theme-dark {
     background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    --block-color-start: #00d4ff;
+    --block-color-end: #ffd700;
 }
 
 /* Welcome Screen */
@@ -86,14 +100,15 @@ button {
     font-weight: bold;
     border: none;
     border-radius: 16px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, var(--block-color-start) 0%, var(--block-color-end) 100%);
     color: white;
     cursor: pointer;
     min-width: 220px;
-    box-shadow: 0 8px 24px rgba(245,87,108,0.4);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 button::before {
@@ -113,12 +128,12 @@ button:hover::before {
 
 button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(245,87,108,0.5);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
 }
 
 button:active {
     transform: translateY(0);
-    box-shadow: 0 4px 16px rgba(245,87,108,0.3);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
 }
 
 /* Game Screen */
@@ -173,8 +188,8 @@ button:active {
 }
 
 .cell.filled {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    box-shadow: 0 4px 12px rgba(245,87,108,0.4);
+    background: linear-gradient(135deg, var(--block-color-start) 0%, var(--block-color-end) 100%);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     animation: placeBlock 0.3s ease;
 }
 
@@ -263,9 +278,9 @@ button:active {
 .piece-cell {
     width: 24px;
     height: 24px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, var(--block-color-start) 0%, var(--block-color-end) 100%);
     border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(245,87,108,0.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 /* Game Over Modal */
@@ -370,24 +385,28 @@ button:active {
 
 /* Color selector buttons */
 .color-btn {
-    width: 50px;
-    height: 50px;
-    border: 3px solid rgba(255,255,255,0.3);
+    width: 25px;
+    height: 25px;
+    min-width: 25px;
+    min-height: 25px;
+    border: 2px solid rgba(255,255,255,0.3);
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s ease;
     padding: 0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    margin: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    flex-shrink: 0;
 }
 
 .color-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    transform: scale(1.15);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
 }
 
 .color-btn.active {
     border-color: white;
-    border-width: 4px;
-    transform: scale(1.15);
-    box-shadow: 0 0 20px rgba(255,255,255,0.5);
+    border-width: 2px;
+    transform: scale(1.2);
+    box-shadow: 0 0 12px rgba(255,255,255,0.6);
 }

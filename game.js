@@ -400,12 +400,16 @@ function generatePieceHTML(shape) {
     const rows = shape.length;
     const cols = shape[0].length;
 
+    // Get current theme colors
+    const startColor = getComputedStyle(document.body).getPropertyValue('--block-color-start').trim();
+    const endColor = getComputedStyle(document.body).getPropertyValue('--block-color-end').trim();
+
     let html = `<div style="display: grid; grid-template-columns: repeat(${cols}, 16px); gap: 2px;">`;
 
     shape.forEach(row => {
         row.forEach(cell => {
             if (cell === 1) {
-                html += '<div style="width: 16px; height: 16px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 3px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>';
+                html += `<div style="width: 16px; height: 16px; background: linear-gradient(135deg, ${startColor} 0%, ${endColor} 100%); border-radius: 3px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>`;
             } else {
                 html += '<div style="width: 16px; height: 16px;"></div>';
             }
