@@ -341,9 +341,23 @@ function hasValidMoves() {
 
 function updateScore() {
     document.getElementById('current-score').textContent = score;
+    if (typeof MP !== 'undefined') MP.sendScore(score);
 }
 
 function gameOver() {
+    if (typeof MP !== 'undefined' && MP.active) {
+        MP.sendGameOver(score);
+        if (!MP.opponentDone) {
+            // Mostra messaggio di attesa avversario
+            document.getElementById('game-over-message').textContent = `Hai finito con ${score.toLocaleString()} punti! Attendi ${MP.opponentName}...`;
+            document.getElementById('final-score').textContent = '';
+            document.getElementById('piece-stats').innerHTML = '';
+            document.getElementById('game-over-modal').style.display = 'flex';
+            document.getElementById('play-again-button').style.display = 'none';
+            return;
+        }
+    }
+    document.getElementById('play-again-button').style.display = '';
     const isNewRecord = score > bestScore;
 
     if (isNewRecord) {
