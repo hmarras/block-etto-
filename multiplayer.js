@@ -149,10 +149,18 @@ const MP = {
 // ── QR Code generato in browser ──────────────────────────────────────────────
 
 function generateQRCode(text, container) {
-    // Usa l'API di Google Charts per il QR (no librerie esterne)
-    const size = 180;
-    const url = `https://chart.googleapis.com/chart?chs=${size}x${size}&cht=qr&chl=${encodeURIComponent(text)}&choe=UTF-8`;
-    container.innerHTML = `<img src="${url}" style="width:${size}px;height:${size}px;border-radius:12px;" alt="QR Code">`;
+    container.innerHTML = '';
+    new QRCode(container, {
+        text: text,
+        width: 180,
+        height: 180,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+    });
+    // Arrotonda il canvas generato
+    const canvas = container.querySelector('canvas');
+    if (canvas) canvas.style.borderRadius = '12px';
 }
 
 // ── URL param: auto-join ─────────────────────────────────────────────────────
