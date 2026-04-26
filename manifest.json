@@ -1,0 +1,26 @@
+{
+  "name": "Block-etto",
+  "short_name": "Block-etto",
+  "description": "Piazza i blocchi, completa le linee, fai il record!",
+  "start_url": "/block-etto-/",
+  "display": "standalone",
+  "background_color": "#667eea",
+  "theme_color": "#667eea",
+  "icons": [
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
