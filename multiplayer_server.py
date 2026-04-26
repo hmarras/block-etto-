@@ -10,11 +10,17 @@ import random
 import string
 import os
 
-rooms = {}  # code → {players, names, scores, done}
+rooms = {}  # code → {players, names, scores, done, rematch}
 
 
 def make_room_code():
     return ''.join(random.choices(string.ascii_uppercase, k=4))
+
+
+def reset_room(room):
+    room['scores'] = [None, None]
+    room['done'] = [False, False]
+    room['rematch'] = [False, False]
 
 
 async def ws_handler(websocket):
@@ -36,6 +42,7 @@ async def ws_handler(websocket):
                     'names': [name, None],
                     'scores': [None, None],
                     'done': [False, False],
+                    'rematch': [False, False],
                 }
                 player_index = 0
 
@@ -102,8 +109,22 @@ async def ws_handler(websocket):
 
                     if all(room['done']):
                         await _send_results(room)
-                        del rooms[room_code]
-                        room_code = None
+
+            elif msg['type'] == 'rematch_request':
+                if room_code in rooms:
+                    room = rooms[room_code]
+                    room['rematch'][player_index] = True
+
+                    opp_idx = 1 - player_index
+                    opp_ws = room['players'][opp_idx]
+                    if opp_ws:
+                        await opp_ws.send(json.dumps({'type': 'rematch_requested'}))
+
+                    if all(room['rematch']):
+                        reset_room(room)
+                        start = json.dumps({'type': 'game_start'})
+                        await room['players'][0].send(start)
+                        await room['players'][1].send(start)
 
     except websockets.exceptions.ConnectionClosed:
         pass

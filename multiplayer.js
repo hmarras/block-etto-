@@ -108,7 +108,11 @@ const MP = {
 
             case 'game_start':
                 this.active = true;
+                this.opponentDone = false;
+                this.opponentFinalScore = null;
                 document.getElementById('mp-modal').style.display = 'none';
+                document.getElementById('mp-result-modal').style.display = 'none';
+                document.getElementById('mp-rematch-btn').textContent = '⚔️ Rivincita';
                 startMultiplayerGame();
                 break;
 
@@ -128,6 +132,10 @@ const MP = {
 
             case 'result':
                 showMPResult(msg);
+                break;
+
+            case 'rematch_requested':
+                document.getElementById('mp-rematch-btn').textContent = `⚔️ Rivincita (${MP.opponentName} è pronto!)`;
                 break;
 
             case 'opponent_disconnected':
@@ -277,10 +285,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (MP.ws) { MP.ws.close(); MP.ws = null; }
     });
 
+    document.getElementById('mp-rematch-btn').addEventListener('click', () => {
+        document.getElementById('mp-rematch-btn').textContent = '⏳ In attesa dell\'avversario...';
+        document.getElementById('mp-rematch-btn').disabled = true;
+        MP.send({ type: 'rematch_request' });
+    });
+
     document.getElementById('mp-result-again').addEventListener('click', () => {
         document.getElementById('mp-result-modal').style.display = 'none';
         MP.active = false;
-        MP.ws = null;
+        if (MP.ws) { MP.ws.close(); MP.ws = null; }
         document.getElementById('game-screen').style.display = 'none';
         document.getElementById('welcome-screen').style.display = 'flex';
     });
