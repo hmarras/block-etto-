@@ -210,9 +210,25 @@ function startMultiplayerGame() {
     startGame();
 }
 
+function saveMPResult(won, draw) {
+    try {
+        const stats = JSON.parse(localStorage.getItem('playerStats') || '{}');
+        if (draw) {
+            stats.mpDraws = (stats.mpDraws || 0) + 1;
+        } else if (won) {
+            stats.mpWins = (stats.mpWins || 0) + 1;
+        } else {
+            stats.mpLosses = (stats.mpLosses || 0) + 1;
+        }
+        localStorage.setItem('playerStats', JSON.stringify(stats));
+    } catch {}
+}
+
 function showMPResult(msg) {
     document.getElementById('game-over-modal').style.display = 'none';
     document.getElementById('mp-opponent-bar').style.display = 'none';
+
+    saveMPResult(msg.you_won, msg.draw);
 
     const modal = document.getElementById('mp-result-modal');
 

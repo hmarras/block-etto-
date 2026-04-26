@@ -36,9 +36,20 @@
 
         <button id="mp-button" style="margin-top: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;">⚔️ Sfida un amico</button>
 
+        <button id="stats-button" style="margin-top: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;">📊 Le tue stats</button>
+
         <button id="how-to-play-button" style="margin-top: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;">❓ Come funziona</button>
 
         <p style="color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 48px;">by Dario Marras</p>
+    </div>
+
+    <!-- Stats Modal -->
+    <div id="stats-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); z-index:2000; align-items:center; justify-content:center;">
+        <div style="background:linear-gradient(135deg,#667eea,#764ba2); border-radius:24px; padding:32px 24px; max-width:360px; width:90%; position:relative; max-height:85vh; overflow-y:auto;">
+            <button id="stats-close-btn" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.2);border:none;color:white;font-size:22px;width:34px;height:34px;border-radius:50%;cursor:pointer;padding:0;min-width:0;">×</button>
+            <h2 style="color:white;font-size:22px;text-align:center;margin-bottom:24px;">📊 Le tue statistiche</h2>
+            <div id="stats-content"></div>
+        </div>
     </div>
 
     <!-- Multiplayer Modal -->

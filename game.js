@@ -23,6 +23,8 @@ let score = 0;
 let bestScore = 0;
 let playerName = '';
 let pieceStats = {};
+let linesCleared = 0;
+let gameStartTime = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -79,10 +81,75 @@ function setupWelcomeScreen() {
         if (e.key === 'Enter') startGame();
     });
 
-    // Tutorial button
     document.getElementById('how-to-play-button').addEventListener('click', () => {
         openTutorial();
     });
+
+    document.getElementById('stats-button').addEventListener('click', openStatsModal);
+    document.getElementById('stats-close-btn').addEventListener('click', () => {
+        document.getElementById('stats-modal').style.display = 'none';
+    });
+}
+
+function openStatsModal() {
+    const name = localStorage.getItem('playerName') || 'Giocatore';
+    const best = parseInt(localStorage.getItem('bestScore') || '0');
+    const stats = loadAllStats();
+
+    const played = stats.gamesPlayed || 0;
+    const avg = played > 0 ? Math.round((stats.totalScore || 0) / played) : 0;
+    const totalLines = stats.totalLines || 0;
+    const mpWins = stats.mpWins || 0;
+    const mpLosses = stats.mpLosses || 0;
+    const mpDraws = stats.mpDraws || 0;
+    const mpTotal = mpWins + mpLosses + mpDraws;
+    const history = stats.history || [];
+
+    const statBox = (label, value) =>
+        `<div style="background:rgba(255,255,255,0.12);border-radius:12px;padding:14px;text-align:center;">
+            <div style="color:rgba(255,255,255,0.7);font-size:11px;margin-bottom:4px;">${label}</div>
+            <div style="color:white;font-size:22px;font-weight:900;">${value}</div>
+        </div>`;
+
+    const formatDuration = (s) => s < 60 ? `${s}s` : `${Math.floor(s/60)}m ${s%60}s`;
+    const formatDate = (ts) => new Date(ts).toLocaleDateString('it-IT', { day:'2-digit', month:'2-digit' });
+
+    const historyRows = history.slice(0, 5).map(g =>
+        `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.1);font-size:13px;color:rgba(255,255,255,0.9);">
+            <span>${formatDate(g.date)}</span>
+            <span style="font-weight:700;">${(g.score||0).toLocaleString()} pt</span>
+            <span style="color:rgba(255,255,255,0.6);">${g.lines||0} linee · ${formatDuration(g.duration||0)}</span>
+        </div>`
+    ).join('');
+
+    document.getElementById('stats-content').innerHTML = `
+        <div style="text-align:center;margin-bottom:20px;">
+            <div style="font-size:36px;margin-bottom:4px;">👤</div>
+            <div style="color:white;font-size:20px;font-weight:800;">${name}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+            ${statBox('Record', best.toLocaleString())}
+            ${statBox('Partite', played)}
+            ${statBox('Media', avg.toLocaleString())}
+            ${statBox('Linee', totalLines.toLocaleString())}
+        </div>
+        ${mpTotal > 0 ? `
+        <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:14px;margin-bottom:20px;">
+            <div style="color:rgba(255,255,255,0.8);font-size:12px;text-align:center;margin-bottom:10px;">⚔️ MULTIPLAYER</div>
+            <div style="display:flex;justify-content:space-around;text-align:center;">
+                <div><div style="color:#4eff91;font-size:20px;font-weight:900;">${mpWins}</div><div style="color:rgba(255,255,255,0.6);font-size:11px;">Vittorie</div></div>
+                <div><div style="color:#ff6b6b;font-size:20px;font-weight:900;">${mpLosses}</div><div style="color:rgba(255,255,255,0.6);font-size:11px;">Sconfitte</div></div>
+                <div><div style="color:#ffd700;font-size:20px;font-weight:900;">${mpDraws}</div><div style="color:rgba(255,255,255,0.6);font-size:11px;">Pareggi</div></div>
+            </div>
+        </div>` : ''}
+        ${history.length > 0 ? `
+        <div>
+            <div style="color:rgba(255,255,255,0.8);font-size:12px;margin-bottom:8px;">ULTIME PARTITE</div>
+            ${historyRows}
+        </div>` : '<p style="color:rgba(255,255,255,0.5);text-align:center;font-size:14px;">Gioca la tua prima partita!</p>'}
+    `;
+
+    document.getElementById('stats-modal').style.display = 'flex';
 }
 
 function startGame() {
@@ -103,6 +170,8 @@ function initGame() {
     grid = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(0));
     score = 0;
     selectedPieceIndex = null;
+    linesCleared = 0;
+    gameStartTime = Date.now();
 
     // Reset piece statistics
     pieceStats = {};
@@ -310,6 +379,7 @@ async function clearLines() {
         if (totalLines > 1) {
             score += totalLines * 50; // Combo bonus
         }
+        linesCleared += totalLines;
     }
 }
 
@@ -344,11 +414,31 @@ function updateScore() {
     if (typeof MP !== 'undefined') MP.sendScore(score);
 }
 
+function saveGameStats() {
+    const duration = Math.round((Date.now() - gameStartTime) / 1000);
+    const stats = loadAllStats();
+
+    stats.gamesPlayed = (stats.gamesPlayed || 0) + 1;
+    stats.totalScore = (stats.totalScore || 0) + score;
+    stats.totalLines = (stats.totalLines || 0) + linesCleared;
+
+    const history = stats.history || [];
+    history.unshift({ date: Date.now(), score, lines: linesCleared, duration });
+    stats.history = history.slice(0, 20);
+
+    localStorage.setItem('playerStats', JSON.stringify(stats));
+}
+
+function loadAllStats() {
+    try {
+        return JSON.parse(localStorage.getItem('playerStats') || '{}');
+    } catch { return {}; }
+}
+
 function gameOver() {
     if (typeof MP !== 'undefined' && MP.active) {
         MP.sendGameOver(score);
         if (!MP.opponentDone) {
-            // Mostra messaggio di attesa avversario
             document.getElementById('game-over-message').textContent = `Hai finito con ${score.toLocaleString()} punti! Attendi ${MP.opponentName}...`;
             document.getElementById('final-score').textContent = '';
             document.getElementById('piece-stats').innerHTML = '';
@@ -357,6 +447,9 @@ function gameOver() {
             return;
         }
     }
+
+    saveGameStats();
+
     document.getElementById('play-again-button').style.display = '';
     const isNewRecord = score > bestScore;
 
