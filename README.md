@@ -1,6 +1,6 @@
 # 🎮 Block-etto
 
-Un gioco di puzzle a blocchi in italiano - HTML/CSS/JS vanilla
+Un gioco di puzzle a blocchi in italiano - HTML/CSS/JS vanilla, con modalità multiplayer online.
 
 ![Block-etto](https://img.shields.io/badge/Made%20with-Vanilla%20JS-yellow)
 ![License](https://img.shields.io/badge/License-MIT-blue)
@@ -9,79 +9,81 @@ Un gioco di puzzle a blocchi in italiano - HTML/CSS/JS vanilla
 
 1. Inserisci il tuo nome
 2. Scegli il tuo colore preferito
-3. Usa il pulsante **"Come funziona"** per il tutorial interattivo
-4. Clicca un pezzo per selezionarlo
-5. Clicca sulla griglia per piazzarlo
-6. Completa righe e colonne per eliminarle e fare punti!
-7. Il gioco finisce quando non ci sono più mosse valide
+3. Usa **"Come funziona"** per il tutorial interattivo
+4. Clicca un pezzo per selezionarlo, poi clicca sulla griglia per piazzarlo
+5. Completa righe e colonne per eliminarle e fare punti!
+6. Il gioco finisce quando non ci sono più mosse valide
 
 ## ✨ Features
 
-- ❓ **Guida interattiva** - Tutorial in 8 passi con visualizzazioni grafiche
-- 🎨 6 temi colore selezionabili
-- 📊 Statistiche dettagliate alla fine della partita
-- 💾 Salvataggio automatico nome e record
-- 🎭 Animazioni fluide per le linee eliminate
-- 📱 Responsive design (desktop e mobile)
-- 🎲 12 forme diverse di pezzi
+- ⚔️ **Multiplayer online** — sfida un amico con QR code, rivincita immediata
+- 📊 **Statistiche personali** — storico partite, media, linee, vittorie/sconfitte MP
+- ❓ **Tutorial interattivo** — guida in 8 passi con animazioni
+- 🎨 **6 temi colore** selezionabili
+- 💾 **Salvataggio locale** — nome, record e stats persistono sul dispositivo
+- 📱 **PWA-ready** — aggiungibile alla home screen iOS/Android con icona dedicata
+- 🎲 **12 forme** di pezzi diversi
+- 🎭 **Animazioni fluide** per linee eliminate e piazzamento blocchi
 
-## 🎯 Regole e Punteggio
+## 🎯 Punteggio
 
 - **10 punti** per ogni blocco piazzato
 - **100 punti** per ogni riga/colonna completata
-- **Bonus combo** per eliminazioni multiple
+- **Bonus combo** per eliminazioni multiple simultanee
 
 ## 🚀 Gioca Online
 
-Visita: [https://hmarras.github.io/block-etto-/](https://hmarras.github.io/block-etto-/)
+[https://hmarras.github.io/block-etto-/](https://hmarras.github.io/block-etto-/)
+
+## ⚔️ Multiplayer
+
+Il multiplayer usa un WebSocket server su Render.com. Player 1 crea la stanza e condivide il QR code; Player 2 lo scansiona e si unisce. Vince chi fa più punti. Alla fine è possibile fare rivincita senza ricominciare da zero.
+
+**Nota:** il server free di Render dorme dopo 15 minuti di inattività — la prima connessione può richiedere ~30 secondi.
 
 ## 💻 Sviluppo Locale
 
+### Solo single player
 ```bash
-# Opzione 1: Apri direttamente index.html nel browser
-
-# Opzione 2: Con Python
-python3 -m http.server 8000
-# Poi vai su http://localhost:8000
-
-# Opzione 3: Con Node
-npx http-server -p 8000
+python3 -m http.server 8080
+# Vai su http://localhost:8080
 ```
 
-## 📖 Tutorial Interattivo
+### Con multiplayer
+```bash
+python3 multiplayer_server.py
+# Serve HTTP su :8080 e WebSocket su :8765
+```
 
-Block-etto include una guida interattiva completa che spiega:
-
-1. **Introduzione** - Benvenuto e scopo del gioco
-2. **La Griglia** - Come funziona la griglia 8x8
-3. **I Pezzi** - Sistema di 3 pezzi disponibili
-4. **Piazzamento** - Come selezionare e posizionare i blocchi
-5. **Eliminazione** - Meccanica di completamento righe/colonne
-6. **Punteggio** - Sistema di punti e bonus combo
-7. **Game Over** - Condizione di fine partita
-8. **Riepilogo** - Consigli finali per giocare
-
-Ogni passo include visualizzazioni grafiche animate per facilitare l'apprendimento.
+Richiede: `pip install websockets`
 
 ## 📁 Struttura Progetto
 
 ```
 block-etto/
-├── index.html     # Struttura HTML
-├── style.css      # Stili e animazioni
-├── game.js        # Logica del gioco
-├── tutorial.js    # Sistema tutorial interattivo
-├── CLAUDE.md      # Documentazione tecnica
-└── README.md      # Questo file
+├── index.html              # Struttura HTML (welcome, game, modali)
+├── style.css               # Stili e animazioni
+├── game.js                 # Logica single player + statistiche localStorage
+├── multiplayer.js          # Client WebSocket multiplayer
+├── multiplayer_server.py   # Server WebSocket (deploy su Render.com)
+├── tutorial.js             # Tutorial interattivo
+├── requirements.txt        # Dipendenze Python (websockets)
+├── manifest.json           # PWA manifest
+├── apple-touch-icon.png    # Icona iOS home screen
+├── icon-192.png            # Icona Android
+├── icon-512.png            # Icona alta risoluzione
+├── CLAUDE.md               # Documentazione tecnica per Claude Code
+└── README.md               # Questo file
 ```
 
 ## 🛠️ Tecnologie
 
-- HTML5
-- CSS3 (Gradients, Animations, Grid)
-- JavaScript Vanilla (ES6+)
-- LocalStorage API
+- HTML5 / CSS3 / JavaScript Vanilla (ES6+)
+- WebSocket (client nativo + server Python `websockets`)
+- LocalStorage API per persistenza dati
+- GitHub Pages per hosting statico
+- Render.com per il server WebSocket (free tier)
 
 ## 📜 Licenza
 
-MIT License - Sentiti libero di usare e modificare!
+MIT License
