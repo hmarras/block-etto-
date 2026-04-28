@@ -19,7 +19,7 @@ Supporta single player e multiplayer online (WebSocket su Render.com).
 | Multiplayer | WebSocket nativo (client) + Python `websockets` (server) |
 | Hosting statico | GitHub Pages (`main` branch) |
 | Hosting server | Render.com free tier (auto-deploy da GitHub) |
-| PWA | manifest.json + apple-touch-icon |
+| PWA | manifest.json + apple-touch-icon + service worker (`sw.js`) |
 
 **Nessun framework, nessun build step.**
 
@@ -40,6 +40,10 @@ Supporta single player e multiplayer online (WebSocket su Render.com).
 ├── apple-touch-icon.png    # 180x180 per iOS
 ├── icon-192.png            # 192x192 per Android
 ├── icon-512.png            # 512x512 alta risoluzione
+├── shop.js                 # Logica shop, wallet, guardaroba, skin, engagement
+├── skins.css               # CSS delle 11 skin (Classic, Scacchi, Legno, Regali, Neon, Lego, Cristallo, 4 calcio)
+├── sw.js                   # Service worker per cache management e aggiornamento automatico
+├── mockup-skins.html       # Pagina di riferimento visivo delle skin (standalone, no deploy necessario)
 ├── create_icon.py          # Script Python per rigenerare le icone (PIL)
 ├── README.md               # Documentazione utente
 └── CLAUDE.md               # Questo file
@@ -174,6 +178,19 @@ cd "/Users/hmarras/Documents/Personale/Progetti/Block etto"
 python3 create_icon.py  # genera apple-touch-icon.png, icon-192.png, icon-512.png
 ```
 
+### Service Worker (`sw.js`)
+
+Gestisce la cache e forza il reload automatico su tutti i client (incluse PWA su iOS) quando viene deployata una nuova versione.
+
+- **HTML**: strategia network-first (sempre aggiornato se online, fallback cache se offline)
+- **Asset statici**: strategia cache-first
+- `skipWaiting()` + `clients.claim()`: il nuovo SW si attiva subito
+- `controllerchange` in `index.html`: la pagina si ricarica automaticamente quando il nuovo SW prende controllo
+
+**Per forzare aggiornamento a tutti gli utenti:** incrementare `CACHE_VERSION` in `sw.js` (es. `'v2'` → `'v3'`) prima del push. Il browser detecta che sw.js è cambiato e aggiorna tutti i client automaticamente.
+
+**Versione corrente:** `v2`
+
 ---
 
 ## LocalStorage Schema Completo
@@ -191,9 +208,30 @@ python3 create_icon.py  # genera apple-touch-icon.png, icon-192.png, icon-512.pn
     mpLosses: number,
     mpDraws: number,
     history: Array<{date, score, lines, duration}>
-  }
+  },
+  walletPoints: number,     // Punti-moneta accumulati
+  ownedSkins: string[],     // JSON — es. '["classic","chess"]', default ["classic"]
+  activeSkin: string,       // es. "chess", default "classic"
 }
 ```
+
+### Sistema Shop / Wallet / Skin (`shop.js` + `skins.css`)
+
+**Economia:** `walletEarned = Math.floor(score / 30) × multiplier`
+
+Moltiplicatori promo basati su `gamesPlayed`:
+- Partite 1–5: ×5 | 6–10: ×3 | 11–20: ×2 | 21+: ×1
+
+**Prezzi skin:** Classic 0pt · Scacchi 300 · Legno 450 · Regali 600 · Neon 750 · Lego 950 · Cristallo 1200 · Calcio 1500
+
+**Skin con varianti posizionali** (applicate da `applySkinToCell()` in `game.js`):
+- `chess`: `--light` / `--dark` alternati per (row+col) % 2
+- `gift`: `--r` / `--g` / `--b` per pieceIndex % 3 oppure (row*8+col) % 3
+- `neon`: `--cyan` / `--green` / `--magenta` per (row+col) % 3
+
+**Skin neon** richiede griglia scura: classe `.skin-neon-active` su `#grid` e `#pieces` (togglata in `renderGrid()` e `renderPieces()`).
+
+**CustomEvent `skinChanged`**: dispatchato da `shopSetActive()`, ascoltato in `game.js` DOMContentLoaded per aggiornare `activeSkin` senza ricaricare.
 
 ---
 
