@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block-etto — Mockup Skin</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0 16px 72px;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .page-wrapper {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        /* ── Header ───────────────────────────────────────────── */
+        .page-header {
+            text-align: center;
+            padding: 52px 0 44px;
+        }
+
+        .page-header h1 {
+            font-size: clamp(44px, 10vw, 72px);
+            font-weight: 900;
+            letter-spacing: -3px;
+            line-height: 1;
+            background: linear-gradient(135deg, #fff 0%, #d8d8ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            font-size: 15px;
+            color: rgba(255,255,255,0.72);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* ── Grid ─────────────────────────────────────────────── */
+        .skins-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        @media (min-width: 600px) {
+            .skins-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        }
+        @media (min-width: 900px) {
+            .skins-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+        }
+
+        .skins-grid--calcio {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @media (min-width: 600px) {
+            .skins-grid--calcio { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        /* ── Card ─────────────────────────────────────────────── */
+        .skin-card {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        .skin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 36px rgba(0,0,0,0.35);
+        }
+
+        .skin-card[data-skin="neon"] {
+            border-color: rgba(0,245,255,0.28);
+            box-shadow: 0 0 22px rgba(0,245,255,0.09);
+        }
+
+        .card-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .skin-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ── Badges ───────────────────────────────────────────── */
+        .skin-badge {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            padding: 3px 7px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .skin-badge--free    { background: #43e97b; color: #1a5c35; }
+        .skin-badge--premium { background: linear-gradient(135deg, #ffd700, #ffb300); color: #5a3a00; }
+        .skin-badge--calcio  { background: linear-gradient(135deg, #2ecc71, #27ae60); color: #fff; }
+
+        /* ── Preview box ──────────────────────────────────────── */
+        .skin-preview {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            min-height: 96px;
+        }
+
+        .skin-preview--dark { background: #0a0a12; }
+
+        /* ── Preview grids ────────────────────────────────────── */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 28px);
+            grid-template-rows: repeat(3, 28px);
+            gap: 4px;
+        }
+
+        .preview-grid--1x3 {
+            grid-template-columns: repeat(3, 32px);
+            grid-template-rows: 32px;
+        }
+
+        .preview-cell {
+            width: 28px;
+            height: 28px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 5px;
+        }
+
+        .preview-grid--1x3 .preview-cell {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* ── Footer ───────────────────────────────────────────── */
+        .card-footer { width: 100%; text-align: center; }
+
+        .skin-price {
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.82);
+        }
+
+        /* ── Section separator ────────────────────────────────── */
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255,255,255,0.88);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin: 36px 0 16px;
+        }
+        .section-label::before,
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.25);
+        }
+
+        /* ══════════════════════════════════════════════════════
+           SKIN STYLES
+        ══════════════════════════════════════════════════════ */
+
+        /* 1 ── Classic */
+        .skin-classic {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* 2 ── Regali */
+        .skin-gift {
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+        }
+        .skin-gift[data-c="r"] { background: #e53935; }
+        .skin-gift[data-c="g"] { background: #43a047; }
+        .skin-gift[data-c="b"] { background: #1976d2; }
+
+        /* Nastro verticale */
+        .skin-gift::before {
+            content: '';
+            position: absolute;
+            left: 50%; top: 0;
+            width: 5px; height: 100%;
+            background: rgba(255,255,255,0.85);
+            transform: translateX(-50%);
+        }
+        /* Nastro orizzontale */
+        .skin-gift::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0;
+            width: 100%; height: 5px;
+            background: rgba(255,255,255,0.85);
+            transform: translateY(-50%);
+        }
+
+        /* 3 ── Scacchi */
+        .skin-chess {
+            border-radius: 3px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.25);
+        }
+        .skin-chess--light { background: #f0d9b5; border: 1px solid #b58863; }
+        .skin-chess--dark  { background: #b58863; border: 1px solid #8a6642; }
+
+        /* 4 ── Lego */
+        .skin-lego {
+            background: #e3000b;
+            border-radius: 4px;
+            position: relative;
+            box-shadow:
+                inset -3px -3px 0 rgba(0,0,0,0.35),
+                inset  3px  3px 0 rgba(255,255,255,0.25),
+                0 4px 8px rgba(0,0,0,0.4);
+        }
+        /* Stud */
+        .skin-lego::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 8px;
+            background: #c8000a;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 0 -1px 0 rgba(255,255,255,0.22), 0 2px 0 rgba(0,0,0,0.3);
+        }
+
+        /* 5 ── Cristallo */
+        .skin-crystal {
+            background: linear-gradient(135deg,
+                rgba(255,255,255,0.58) 0%,
+                rgba(200,230,255,0.28) 45%,
+                rgba(150,200,255,0.16) 100%
+            );
+            border: 1px solid rgba(255,255,255,0.52);
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow:
+                0 4px 16px rgba(100,180,255,0.32),
+                inset 0 1px 0 rgba(255,255,255,0.72),
+                inset 0 -1px 0 rgba(200,220,255,0.28);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Highlight angolo */
+        .skin-crystal::before {
+            content: '';
+            position: absolute;
+            top: -3px; left: -3px;
+            width: 14px; height: 14px;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.82) 0%, transparent 68%);
+            border-radius: 50%;
+        }
+        /* Puntino brillantina */
+        .skin-crystal::after {
+            content: '';
+            position: absolute;
+            bottom: 4px; right: 4px;
+            width: 5px; height: 5px;
+            background: rgba(255,255,255,0.65);
+            border-radius: 50%;
+            box-shadow: 0 0 4px rgba(255,255,255,0.8);
+        }
+
+        /* 6 ── Neon */
+        .skin-neon { border-radius: 6px; }
+
+        .skin-neon--cyan {
+            background: #0d1b2a;
+            border: 1.5px solid #00f5ff;
+            box-shadow:
+                0 0 6px #00f5ff,
+                0 0 14px rgba(0,245,255,0.52),
+                0 0 28px rgba(0,245,255,0.22),
+                inset 0 0 8px rgba(0,245,255,0.12);
+        }
+        .skin-neon--green {
+            background: #0d1b0e;
+            border: 1.5px solid #39ff14;
+            box-shadow:
+                0 0 6px #39ff14,
+                0 0 14px rgba(57,255,20,0.52),
+                0 0 28px rgba(57,255,20,0.22),
+                inset 0 0 8px rgba(57,255,20,0.12);
+        }
+        .skin-neon--magenta {
+            background: #1a0d1a;
+            border: 1.5px solid #ff00ff;
+            box-shadow:
+                0 0 6px #ff00ff,
+                0 0 14px rgba(255,0,255,0.52),
+                0 0 28px rgba(255,0,255,0.22),
+                inset 0 0 8px rgba(255,0,255,0.12);
+        }
+
+        /* 7 ── Legno */
+        .skin-wood {
+            background: linear-gradient(160deg, #a0522d 0%, #8b4513 30%, #a0522d 60%, #6b3410 100%);
+            border-radius: 5px;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.16),
+                0 3px 8px rgba(0,0,0,0.42);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Venatura */
+        .skin-wood::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                72deg,
+                transparent 0px,
+                transparent 3px,
+                rgba(0,0,0,0.07) 3px,
+                rgba(0,0,0,0.07) 4px,
+                transparent 4px,
+                transparent 7px,
+                rgba(255,255,255,0.04) 7px,
+                rgba(255,255,255,0.04) 8px
+            );
+        }
+
+        /* 8-11 ── Calcio */
+        .skin-juventus {
+            background: repeating-linear-gradient(
+                90deg,
+                #000000 0px, #000000 7px,
+                #ffffff 7px, #ffffff 14px
+            );
+            border-radius: 4px;
+            border: 1px solid #555;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+        .skin-milan {
+            background: repeating-linear-gradient(
+                90deg,
+                #C8102E 0px, #C8102E 7px,
+                #000000 7px, #000000 14px
+            );
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+        .skin-inter {
+            background: repeating-linear-gradient(
+                90deg,
+                #003DA5 0px, #003DA5 7px,
+                #000000 7px, #000000 14px
+            );
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+        .skin-napoli {
+            background: #12A0C3;
+            border-radius: 4px;
+            border: 2px solid rgba(255,255,255,0.65);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <header class="page-header">
+        <h1>🎮 Block-etto</h1>
+        <p>Mockup Skin — Scegli il tuo stile</p>
+    </header>
+
+    <!-- ─── Skin principali ─────────────────────────────── -->
+    <div class="skins-grid">
+
+        <!-- 1. Classic -->
+        <div class="skin-card" data-skin="classic">
+            <div class="card-header">
+                <span class="skin-name">Classic</span>
+                <span class="skin-badge skin-badge--free">GRATIS</span>
+            </div>
+            <div class="skin-preview">
+                <div class="preview-grid">
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell skin-classic"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell skin-classic"></div>
+                    <div class="preview-cell skin-classic"></div>
+                    <div class="preview-cell"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="skin-price">Incluso</span>
+            </div>
+        </div>
+
+        <!-- 2. Regali -->
+        <div class="skin-card" data-skin="gift">
+            <div class="card-header">
+                <span class="skin-name">Regali</span>
+                <span class="skin-badge skin-badge--premium">PREMIUM</span>
+            </div>
+            <div class="skin-preview">
+                <div class="preview-grid">
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell skin-gift" data-c="r"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell skin-gift" data-c="g"></div>
+                    <div class="preview-cell skin-gift" data-c="b"></div>
+                    <div class="preview-cell"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="skin-price">🪙 500 pt</span>
+            </div>
+        </div>
+
+        <!-- 3. Scacchi -->
+        <div class="skin-card" data-skin="chess">
+            <div class="card-header">
+                <span class="skin-name">Scacchi</span>
+                <span class="skin-badge skin-badge--premium">PREMIUM</span>
+            </div>
+            <div class="skin-preview">
+                <div class="preview-grid">
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell skin-chess skin-chess--light"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell skin-chess skin-chess--dark"></div>
+                    <div class="preview-cell skin-chess skin-chess--light"></div>
+                    <div class="preview-cell"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="skin-price">🪙 300 pt</span>
+            </div>
+        </div>
+
+        <!-- 4. Lego -->
+        <div class="skin-card" data-skin="lego">
+            <div class="card-header">
+                <span class="skin-name">Lego</span>
+                <span class="skin-badge skin-badge--premium">PREMIUM</span>
+            </div>
+            <div class="skin-preview">
+                <div class="preview-grid">
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell skin-lego"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell skin-lego"></div>
+                    <div class="preview-cell skin-lego"></div>
+                    <div class="preview-cell"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="skin-price">🪙 800 pt</span>
+            </div>
+        </div>
+
+        <!-- 5. Cristallo -->
+        <div class="skin-card" data-skin="crystal">
+            <div class="card-header">
+                <span class="skin-name">Cristallo</span>
+                <span class="skin-badge skin-badge--premium">PREMIUM</span>
+            </div>
+            <div class="skin-preview">
+                <div class="preview-grid">
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell skin-crystal"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell skin-crystal"></div>
+                    <div class="preview-cell skin-crystal"></div>
+                    <div class="preview-cell"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="skin-price">🪙 1.000 pt</span>
+            </div>
+        </div>
+
+        <!-- 6. Neon -->
+        <div class="skin-card" data-skin="neon">
+            <div class="card-header">
+                <span class="skin-name">Neon</span>
+                <span class="skin-badge skin-badge--premium">PREMIUM</span>
+            </div>
+            <div class="skin-preview skin-preview--dark">
+                <div class="preview-grid">
+                    <div class="preview-cell" style="background:rgba(255,255,255,0.04)"></div>
+                    <div class="preview-cell" style="background:rgba(255,255,255,0.04)"></div>
+                    <div class="preview-cell" style="background:rgba(255,255,255,0.04)"></div>
+                    <div class="preview-cell skin-neon skin-neon--cyan"></div>
+                    <div class="preview-cell" style="background:rgba(255,255,255,0.04)"></div>
+                    <div class="preview-cell" style="background:rgba(255,255,255,0.04)"></div>
+                    <div class="preview-cell skin-neon skin-neon--green"></div>
+                    <div class="preview-cell skin-neon skin-neon--magenta"></div>
+                    <div class="preview-cell" style="background:rgba(255,255,255,0.04)"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="skin-price">🪙 700 pt</span>
+            </div>
+        </div>
+
+        <!-- 7. Legno -->
+        <div class="skin-card" data-skin="wood">
+            <div class="card-header">
+                <span class="skin-name">Legno</span>
+                <span class="skin-badge skin-badge--premium">PREMIUM</span>
+            </div>
+            <div class="skin-preview">
+                <div class="preview-grid">
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell skin-wood"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell"></div>
+                    <div class="preview-cell skin-wood"></div>
+                    <div class="preview-cell skin-wood"></div>
+                    <div class="preview-cell"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="skin-price">🪙 400 pt</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ─── Sezione Calcio ──────────────────────────────── -->
+    <div class="section-label">⚽ Calcio</div>
+    <div class="skins-grid skins-grid--calcio">
+
+        <!-- 8. Juventus -->
+        <div class="skin-card" data-skin="juventus">
+            <div class="card-header">
+                <span class="skin-name">Juventus</span>
+                <span class="skin-badge skin-badge--calcio">CALCIO</span>
+            </div>
+            <div class="skin-preview">
+                <div class="preview-grid preview-grid--1x3">
+                    <div class="preview-cell skin-juventus"></div>
+                    <div class="preview-cell skin-juventus"></div>
+                    <div class="preview-cell skin-juventus"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="skin-price">🪙 1.200 pt</span>
+            </div>
+        </div>
+
+        <!-- 9. Milan -->
+        <div class="skin-card" data-skin="milan">
+            <div class="card-header">
+                <span class="skin-name">Milan</span>
+                <span class="skin-badge skin-badge--calcio">CALCIO</span>
+            </div>
+            <div class="skin-preview">
+                <div class="preview-grid preview-grid--1x3">
+                    <div class="preview-cell skin-milan"></div>
+                    <div class="preview-cell skin-milan"></div>
+                    <div class="preview-cell skin-milan"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="skin-price">🪙 1.200 pt</span>
+            </div>
+        </div>
+
+        <!-- 10. Inter -->
+        <div class="skin-card" data-skin="inter">
+            <div class="card-header">
+                <span class="skin-name">Inter</span>
+                <span class="skin-badge skin-badge--calcio">CALCIO</span>
+            </div>
+            <div class="skin-preview">
+                <div class="preview-grid preview-grid--1x3">
+                    <div class="preview-cell skin-inter"></div>
+                    <div class="preview-cell skin-inter"></div>
+                    <div class="preview-cell skin-inter"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="skin-price">🪙 1.200 pt</span>
+            </div>
+        </div>
+
+        <!-- 11. Napoli -->
+        <div class="skin-card" data-skin="napoli">
+            <div class="card-header">
+                <span class="skin-name">Napoli</span>
+                <span class="skin-badge skin-badge--calcio">CALCIO</span>
+            </div>
+            <div class="skin-preview">
+                <div class="preview-grid preview-grid--1x3">
+                    <div class="preview-cell skin-napoli"></div>
+                    <div class="preview-cell skin-napoli"></div>
+                    <div class="preview-cell skin-napoli"></div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="skin-price">🪙 1.200 pt</span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

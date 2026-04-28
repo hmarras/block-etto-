@@ -1,0 +1,272 @@
+/* ================================================================
+   Block-etto — Skin CSS
+   Applicato su .cell.filled.skin-X e .piece-cell.skin-X
+   NON settare width/height: le celle hanno già aspect-ratio:1
+   ================================================================ */
+
+/* ── Skin Classic ─────────────────────────────────────────────────
+   Nessuna classe: usa il gradient del tema (default di .cell.filled)
+   ─────────────────────────────────────────────────────────────── */
+
+/* ── Skin Scacchi ─────────────────────────────────────────────── */
+.cell.filled.skin-chess,
+.piece-cell.skin-chess {
+    background: none;
+    border-radius: 3px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.25);
+    animation: none;
+}
+
+.cell.filled.skin-chess--light,
+.piece-cell.skin-chess--light {
+    background: #f0d9b5;
+    border: 1px solid #b58863;
+}
+
+.cell.filled.skin-chess--dark,
+.piece-cell.skin-chess--dark {
+    background: #b58863;
+    border: 1px solid #8a6642;
+}
+
+/* ── Skin Legno ───────────────────────────────────────────────── */
+.cell.filled.skin-wood,
+.piece-cell.skin-wood {
+    background: linear-gradient(160deg, #a0522d 0%, #8b4513 30%, #a0522d 60%, #6b3410 100%);
+    border-radius: 5px;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.16),
+        0 3px 8px rgba(0,0,0,0.42);
+    position: relative;
+    overflow: hidden;
+}
+
+.cell.filled.skin-wood::before,
+.piece-cell.skin-wood::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        72deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(0,0,0,0.07) 3px,
+        rgba(0,0,0,0.07) 4px,
+        transparent 4px,
+        transparent 7px,
+        rgba(255,255,255,0.04) 7px,
+        rgba(255,255,255,0.04) 8px
+    );
+}
+
+/* ── Skin Regali ──────────────────────────────────────────────── */
+.cell.filled.skin-gift,
+.piece-cell.skin-gift {
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+
+.cell.filled.skin-gift--r,
+.piece-cell.skin-gift--r { background: #e53935; }
+
+.cell.filled.skin-gift--g,
+.piece-cell.skin-gift--g { background: #43a047; }
+
+.cell.filled.skin-gift--b,
+.piece-cell.skin-gift--b { background: #1976d2; }
+
+/* Nastro verticale */
+.cell.filled.skin-gift::before,
+.piece-cell.skin-gift::before {
+    content: '';
+    position: absolute;
+    left: 50%; top: 0;
+    width: 18%; height: 100%;
+    background: rgba(255,255,255,0.82);
+    transform: translateX(-50%);
+}
+
+/* Nastro orizzontale */
+.cell.filled.skin-gift::after,
+.piece-cell.skin-gift::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0;
+    width: 100%; height: 18%;
+    background: rgba(255,255,255,0.82);
+    transform: translateY(-50%);
+}
+
+/* ── Skin Neon ────────────────────────────────────────────────── */
+
+/* Griglia scura quando neon è attiva */
+#grid.skin-neon-active {
+    background: #05050f;
+}
+#grid.skin-neon-active .cell {
+    background: rgba(255,255,255,0.05);
+    box-shadow: none;
+}
+
+/* Pezzi in basso: sfondo scuro */
+#pieces.skin-neon-active {
+    background: rgba(0,0,0,0.5);
+}
+#pieces.skin-neon-active .piece-container {
+    background: rgba(255,255,255,0.05);
+}
+
+.cell.filled.skin-neon,
+.piece-cell.skin-neon {
+    border-radius: 6px;
+}
+
+.cell.filled.skin-neon--cyan,
+.piece-cell.skin-neon--cyan {
+    background: #0d1b2a;
+    border: 1.5px solid #00f5ff;
+    box-shadow:
+        0 0 6px #00f5ff,
+        0 0 14px rgba(0,245,255,0.52),
+        0 0 28px rgba(0,245,255,0.22),
+        inset 0 0 8px rgba(0,245,255,0.12);
+}
+
+.cell.filled.skin-neon--green,
+.piece-cell.skin-neon--green {
+    background: #0d1b0e;
+    border: 1.5px solid #39ff14;
+    box-shadow:
+        0 0 6px #39ff14,
+        0 0 14px rgba(57,255,20,0.52),
+        0 0 28px rgba(57,255,20,0.22),
+        inset 0 0 8px rgba(57,255,20,0.12);
+}
+
+.cell.filled.skin-neon--magenta,
+.piece-cell.skin-neon--magenta {
+    background: #1a0d1a;
+    border: 1.5px solid #ff00ff;
+    box-shadow:
+        0 0 6px #ff00ff,
+        0 0 14px rgba(255,0,255,0.52),
+        0 0 28px rgba(255,0,255,0.22),
+        inset 0 0 8px rgba(255,0,255,0.12);
+}
+
+/* ── Skin Lego ────────────────────────────────────────────────── */
+.cell.filled.skin-lego,
+.piece-cell.skin-lego {
+    background: #e3000b;
+    border-radius: 4px;
+    position: relative;
+    box-shadow:
+        inset -3px -3px 0 rgba(0,0,0,0.35),
+        inset  3px  3px 0 rgba(255,255,255,0.25),
+        0 4px 8px rgba(0,0,0,0.4);
+}
+
+/* Stud in percentuali per scalare con la cella */
+.cell.filled.skin-lego::before,
+.piece-cell.skin-lego::before {
+    content: '';
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 30%;
+    background: #c8000a;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    box-shadow:
+        0 -1px 0 rgba(255,255,255,0.22),
+        0 2px 0 rgba(0,0,0,0.3);
+}
+
+/* ── Skin Cristallo ───────────────────────────────────────────── */
+.cell.filled.skin-crystal,
+.piece-cell.skin-crystal {
+    background: linear-gradient(135deg,
+        rgba(255,255,255,0.58) 0%,
+        rgba(200,230,255,0.28) 45%,
+        rgba(150,200,255,0.16) 100%
+    );
+    border: 1px solid rgba(255,255,255,0.52);
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow:
+        0 4px 16px rgba(100,180,255,0.32),
+        inset 0 1px 0 rgba(255,255,255,0.72),
+        inset 0 -1px 0 rgba(200,220,255,0.28);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Highlight angolo alto-sinistra */
+.cell.filled.skin-crystal::before,
+.piece-cell.skin-crystal::before {
+    content: '';
+    position: absolute;
+    top: -3px; left: -3px;
+    width: 40%; height: 40%;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.82) 0%, transparent 68%);
+    border-radius: 50%;
+}
+
+/* Puntino brillantina angolo basso-destra */
+.cell.filled.skin-crystal::after,
+.piece-cell.skin-crystal::after {
+    content: '';
+    position: absolute;
+    bottom: 10%; right: 10%;
+    width: 15%; height: 15%;
+    background: rgba(255,255,255,0.65);
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(255,255,255,0.8);
+}
+
+/* ── Skin Calcio ──────────────────────────────────────────────── */
+.cell.filled.skin-juventus,
+.piece-cell.skin-juventus {
+    background: repeating-linear-gradient(
+        90deg,
+        #000000 0px, #000000 7px,
+        #ffffff 7px, #ffffff 14px
+    );
+    border-radius: 4px;
+    border: 1px solid #555;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.cell.filled.skin-milan,
+.piece-cell.skin-milan {
+    background: repeating-linear-gradient(
+        90deg,
+        #C8102E 0px, #C8102E 7px,
+        #000000 7px, #000000 14px
+    );
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.cell.filled.skin-inter,
+.piece-cell.skin-inter {
+    background: repeating-linear-gradient(
+        90deg,
+        #003DA5 0px, #003DA5 7px,
+        #000000 7px, #000000 14px
+    );
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.cell.filled.skin-napoli,
+.piece-cell.skin-napoli {
+    background: #12A0C3;
+    border-radius: 4px;
+    border: 2px solid rgba(255,255,255,0.65);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}

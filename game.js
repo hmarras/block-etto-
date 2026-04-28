@@ -25,6 +25,7 @@ let playerName = '';
 let pieceStats = {};
 let linesCleared = 0;
 let gameStartTime = null;
+let activeSkin = 'classic';
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -32,15 +33,21 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTheme();
     setupWelcomeScreen();
     setupColorSelector();
+    document.addEventListener('skinChanged', e => { activeSkin = e.detail; });
 });
 
 function loadPlayerData() {
     playerName = localStorage.getItem('playerName') || '';
     bestScore = parseInt(localStorage.getItem('bestScore') || '0');
+    loadActiveSkin();
 
     if (playerName) {
         document.getElementById('player-name').value = playerName;
     }
+}
+
+function loadActiveSkin() {
+    activeSkin = localStorage.getItem('activeSkin') || 'classic';
 }
 
 function loadTheme() {
@@ -153,6 +160,7 @@ function openStatsModal() {
 }
 
 function startGame() {
+    loadActiveSkin();
     playerName = document.getElementById('player-name').value.trim() || 'Giocatore';
     localStorage.setItem('playerName', playerName);
 
@@ -216,6 +224,7 @@ function render() {
 function renderGrid() {
     const gridEl = document.getElementById('grid');
     gridEl.innerHTML = '';
+    gridEl.classList.toggle('skin-neon-active', activeSkin === 'neon');
 
     for (let row = 0; row < GRID_SIZE; row++) {
         for (let col = 0; col < GRID_SIZE; col++) {
@@ -223,6 +232,7 @@ function renderGrid() {
             cell.className = 'cell';
             if (grid[row][col] === 1) {
                 cell.classList.add('filled');
+                applySkinToCell(cell, activeSkin, row, col, null);
             }
             cell.dataset.row = row;
             cell.dataset.col = col;
@@ -235,6 +245,7 @@ function renderGrid() {
 function renderPieces() {
     const piecesEl = document.getElementById('pieces');
     piecesEl.innerHTML = '';
+    piecesEl.classList.toggle('skin-neon-active', activeSkin === 'neon');
 
     currentPieces.forEach((piece, index) => {
         if (!piece) return;
@@ -254,6 +265,7 @@ function renderPieces() {
                 const cellEl = document.createElement('div');
                 if (cell === 1) {
                     cellEl.className = 'piece-cell';
+                    applySkinToCell(cellEl, activeSkin, null, null, index);
                 } else {
                     cellEl.style.width = '20px';
                     cellEl.style.height = '20px';
@@ -449,6 +461,7 @@ function gameOver() {
     }
 
     saveGameStats();
+    const { earned, multiplier } = earnWalletPoints();
 
     document.getElementById('play-again-button').style.display = '';
     const isNewRecord = score > bestScore;
@@ -465,11 +478,31 @@ function gameOver() {
     document.getElementById('game-over-message').textContent = message;
     document.getElementById('final-score').textContent = `Punteggio: ${score}`;
 
+    const walletNotice = document.getElementById('wallet-earned-notice');
+    if (walletNotice && earned > 0) {
+        const promoLabel = multiplier > 1
+            ? ` <span style="background:linear-gradient(135deg,#ffd700,#ffb300);color:#5a3a00;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;letter-spacing:0.3px;">×${multiplier} PROMO!</span>`
+            : '';
+        const total = parseInt(localStorage.getItem('walletPoints') || '0');
+        walletNotice.innerHTML = `
+            <div style="background:rgba(255,255,255,0.12);border-radius:14px;padding:14px 20px;margin:16px 0;text-align:center;">
+                <div style="color:rgba(255,255,255,0.7);font-size:12px;margin-bottom:4px;">Guadagnato${promoLabel}</div>
+                <div style="color:#ffd700;font-size:28px;font-weight:900;">+${earned.toLocaleString()} 🪙</div>
+                <div style="color:rgba(255,255,255,0.55);font-size:11px;margin-top:4px;">Saldo: ${total.toLocaleString()} pt</div>
+            </div>`;
+    } else if (walletNotice) {
+        walletNotice.innerHTML = '';
+    }
+
     // Show piece statistics
     const statsHTML = generateStatsHTML();
     const statsContainer = document.getElementById('piece-stats');
     if (statsContainer) {
         statsContainer.innerHTML = statsHTML;
+    }
+
+    if (typeof showEngagementNotice === 'function') {
+        showEngagementNotice('engagement-notice');
     }
 
     document.getElementById('game-over-modal').style.display = 'flex';
@@ -530,4 +563,35 @@ function generatePieceHTML(shape) {
 
     html += '</div>';
     return html;
+}
+
+function applySkinToCell(el, skin, row, col, pieceIndex) {
+    [...el.classList].forEach(c => { if (c.startsWith('skin-')) el.classList.remove(c); });
+
+    if (!skin || skin === 'classic') return;
+
+    el.classList.add(`skin-${skin}`);
+
+    if (skin === 'chess' && row !== null) {
+        el.classList.add((row + col) % 2 === 0 ? 'skin-chess--light' : 'skin-chess--dark');
+    }
+    if (skin === 'gift') {
+        const i = pieceIndex !== null ? pieceIndex % 3 : (row * GRID_SIZE + col) % 3;
+        el.classList.add(['skin-gift--r', 'skin-gift--g', 'skin-gift--b'][i]);
+    }
+    if (skin === 'neon') {
+        const i = pieceIndex !== null ? pieceIndex % 3 : (row + col) % 3;
+        el.classList.add(['skin-neon--cyan', 'skin-neon--green', 'skin-neon--magenta'][i]);
+    }
+}
+
+function earnWalletPoints() {
+    const stats = loadAllStats();
+    const gamesPlayed = stats.gamesPlayed || 1;
+    const multiplier = gamesPlayed <= 5 ? 5 : gamesPlayed <= 10 ? 3 : gamesPlayed <= 20 ? 2 : 1;
+    const base = Math.floor(score / 30);
+    const earned = base * multiplier;
+    const current = parseInt(localStorage.getItem('walletPoints') || '0');
+    localStorage.setItem('walletPoints', current + earned);
+    return { earned, multiplier };
 }
