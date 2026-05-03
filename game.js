@@ -27,6 +27,12 @@ let linesCleared = 0;
 let gameStartTime = null;
 let activeSkin = 'classic';
 
+// PRO Mode State
+let proMode = false;
+let proTimeLeft = 5;
+let proTimerInterval = null;
+let proTotalBonus = 0;
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     loadPlayerData();
@@ -112,6 +118,64 @@ function setupWelcomeScreen() {
     document.getElementById('stats-close-btn').addEventListener('click', () => {
         document.getElementById('stats-modal').style.display = 'none';
     });
+
+    document.getElementById('pro-toggle-btn').addEventListener('click', toggleProMode);
+}
+
+function toggleProMode() {
+    proMode = !proMode;
+    const btn = document.getElementById('pro-toggle-btn');
+    if (proMode) {
+        btn.textContent = '⚡ Modalità PRO: ON';
+        btn.style.background = 'rgba(255, 200, 0, 0.2)';
+        btn.style.borderColor = 'rgba(255, 200, 0, 0.5)';
+        btn.style.color = '#ffd700';
+    } else {
+        btn.textContent = '⚡ Modalità PRO: OFF';
+        btn.style.background = 'rgba(255,255,255,0.08)';
+        btn.style.borderColor = 'rgba(255,255,255,0.2)';
+        btn.style.color = 'rgba(255,255,255,0.6)';
+    }
+}
+
+function startProTimer() {
+    proTimeLeft = 5;
+    updateProTimerUI();
+    document.getElementById('pro-timer-bar').style.display = 'flex';
+    clearInterval(proTimerInterval);
+    proTimerInterval = setInterval(() => {
+        proTimeLeft--;
+        updateProTimerUI();
+        if (proTimeLeft <= 0) {
+            clearInterval(proTimerInterval);
+            proTimerInterval = null;
+            gameOver();
+        }
+    }, 1000);
+}
+
+function pauseProTimer() {
+    clearInterval(proTimerInterval);
+    proTimerInterval = null;
+}
+
+function stopProTimer() {
+    clearInterval(proTimerInterval);
+    proTimerInterval = null;
+    const bar = document.getElementById('pro-timer-bar');
+    if (bar) bar.style.display = 'none';
+}
+
+function updateProTimerUI() {
+    const count = document.getElementById('pro-timer-count');
+    const fill = document.getElementById('pro-timer-fill');
+    if (count) count.textContent = proTimeLeft;
+    if (fill) {
+        fill.style.width = (proTimeLeft / 5 * 100) + '%';
+        fill.style.background = proTimeLeft <= 2
+            ? 'linear-gradient(90deg, #ff4444, #ff8800)'
+            : 'linear-gradient(90deg, #ffd700, #ffed4e)';
+    }
 }
 
 function openStatsModal() {
@@ -203,6 +267,7 @@ function initGame() {
     selectedPieceIndex = null;
     linesCleared = 0;
     gameStartTime = Date.now();
+    proTotalBonus = 0;
 
     // Reset piece statistics
     pieceStats = {};
@@ -217,7 +282,9 @@ function initGame() {
         randomPiece()
     ];
 
+    stopProTimer();
     render();
+    if (proMode) startProTimer();
 
     document.getElementById('play-again-button').addEventListener('click', () => {
         document.getElementById('game-over-modal').style.display = 'none';
@@ -325,6 +392,12 @@ async function onCellClick(row, col) {
         currentPieces[selectedPieceIndex] = null;
         selectedPieceIndex = null;
 
+        if (proMode) {
+            const bonus = Math.max(proTimeLeft, 0) * 20;
+            if (bonus > 0) { score += bonus; proTotalBonus += bonus; }
+            pauseProTimer();
+        }
+
         render();
 
         await clearLines();
@@ -333,7 +406,10 @@ async function onCellClick(row, col) {
 
         if (!hasValidMoves()) {
             gameOver();
+            return;
         }
+
+        if (proMode) startProTimer();
 
         render();
     }
@@ -488,6 +564,7 @@ function loadAllStats() {
 }
 
 function gameOver() {
+    stopProTimer();
     if (typeof MP !== 'undefined' && MP.active) {
         MP.sendGameOver(score);
         if (!MP.opponentDone) {
@@ -526,7 +603,8 @@ function gameOver() {
         : `Bravo ${playerName}, hai fatto ${score.toLocaleString()} punti.`;
 
     document.getElementById('game-over-message').textContent = message;
-    document.getElementById('final-score').textContent = `Punteggio: ${score}`;
+    const proBonus = proMode && proTotalBonus > 0 ? ` · Bonus ⚡ +${proTotalBonus.toLocaleString()}` : '';
+    document.getElementById('final-score').textContent = `Punteggio: ${score.toLocaleString()}${proBonus}`;
 
     const walletNotice = document.getElementById('wallet-earned-notice');
     if (walletNotice && earned > 0) {

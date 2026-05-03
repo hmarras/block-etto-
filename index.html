@@ -16,7 +16,7 @@
            cache del browser e ricarica prima che qualsiasi altro script giri.
            Aggiornare APP_V ad ogni deploy insieme a CACHE_VERSION in sw.js. */
         (function () {
-            var APP_V = '20260503e';
+            var APP_V = '20260503f';
             if (localStorage.getItem('_bv') !== APP_V) {
                 localStorage.setItem('_bv', APP_V);
                 if ('caches' in window) {
@@ -50,6 +50,8 @@
             <button id="how-to-play-button" style="flex:0 0 auto;min-width:0;padding:18px 18px;font-size:18px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:16px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,0.3);">❓</button>
         </div>
 
+        <button id="pro-toggle-btn" style="margin-top: 8px; max-width: 320px; width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); padding: 10px 20px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600;">⚡ Modalità PRO: OFF</button>
+
         <!-- Color Theme Selector -->
         <div style="margin-top: 24px;">
             <p style="color: rgba(255,255,255,0.9); font-size: 12px; margin-bottom: 8px;">🎨 Tema</p>
@@ -72,7 +74,7 @@
         <div id="welcome-goal" style="margin-top: 20px; max-width: 320px; width: 100%;"></div>
 
         <p style="color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 32px;">by Dario Marras</p>
-        <p style="color: rgba(255,255,255,0.35); font-size: 10px; margin-top: 4px;">v 3 maggio 2026 · 20:57</p>
+        <p style="color: rgba(255,255,255,0.35); font-size: 10px; margin-top: 4px;">v 3 maggio 2026 · 21:21</p>
     </div>
 
     <!-- Stats Modal -->
@@ -197,8 +199,22 @@
             <div>Record: <span id="best-score">0</span></div>
         </div>
 
+        <div id="pro-timer-bar" style="display:none; align-items:center; gap:10px; margin:10px 20px 0; padding:10px 16px; background:rgba(0,0,0,0.2); border-radius:12px;">
+            <span style="color:#ffd700; font-size:13px; font-weight:700; white-space:nowrap;">⚡ <span id="pro-timer-count">5</span>s</span>
+            <div style="flex:1; height:8px; background:rgba(255,255,255,0.1); border-radius:4px; overflow:hidden;">
+                <div id="pro-timer-fill" style="height:100%; width:100%; border-radius:4px; transition:width 0.9s linear; background:linear-gradient(90deg,#ffd700,#ffed4e);"></div>
+            </div>
+        </div>
         <div id="grid"></div>
         <div id="pieces"></div>
+        <div id="emoji-tray" style="display:none; justify-content:center; gap:10px; margin-top:16px; padding:10px 16px; background:rgba(255,255,255,0.08); border-radius:16px;">
+            <button class="emoji-btn" onclick="MP.sendEmoji('😜')">😜</button>
+            <button class="emoji-btn" onclick="MP.sendEmoji('👊')">👊</button>
+            <button class="emoji-btn" onclick="MP.sendEmoji('🔥')">🔥</button>
+            <button class="emoji-btn" onclick="MP.sendEmoji('💀')">💀</button>
+            <button class="emoji-btn" onclick="MP.sendEmoji('👏')">👏</button>
+            <button class="emoji-btn" onclick="MP.sendEmoji('😂')">😂</button>
+        </div>
     </div>
 
     <!-- Game Over Modal -->

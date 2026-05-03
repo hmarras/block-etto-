@@ -110,6 +110,17 @@ async def ws_handler(websocket):
                     if all(room['done']):
                         await _send_results(room)
 
+            elif msg['type'] == 'emoji':
+                if room_code in rooms:
+                    room = rooms[room_code]
+                    opp_idx = 1 - player_index
+                    opp_ws = room['players'][opp_idx]
+                    if opp_ws:
+                        await opp_ws.send(json.dumps({
+                            'type': 'opponent_emoji',
+                            'emoji': msg.get('emoji', '👋'),
+                        }))
+
             elif msg['type'] == 'rematch_request':
                 if room_code in rooms:
                     room = rooms[room_code]

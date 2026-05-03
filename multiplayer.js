@@ -86,6 +86,12 @@ const MP = {
         if (this.active) this.send({ type: 'game_over', score: s });
     },
 
+    sendEmoji(emoji) {
+        if (!this.active) return;
+        this.send({ type: 'emoji', emoji });
+        showEmojiReaction(emoji, true);
+    },
+
     handleMessage(msg) {
         switch (msg.type) {
             case 'room_created':
@@ -138,6 +144,10 @@ const MP = {
                 document.getElementById('mp-rematch-btn').textContent = `⚔️ Rivincita (${MP.opponentName} è pronto!)`;
                 break;
 
+            case 'opponent_emoji':
+                showEmojiReaction(msg.emoji, false);
+                break;
+
             case 'opponent_disconnected':
                 this.showDisconnected();
                 break;
@@ -150,6 +160,7 @@ const MP = {
 
     showDisconnected() {
         this.active = false;
+        document.getElementById('emoji-tray').style.display = 'none';
         document.getElementById('game-over-modal').style.display = 'none';
         document.getElementById('mp-leave-button').style.display = 'none';
         document.getElementById('mp-opponent-bar').style.display = 'none';
@@ -220,7 +231,22 @@ function startMultiplayerGame() {
     document.getElementById('mp-opponent-bar').style.display = 'flex';
     document.getElementById('mp-opponent-label').textContent = MP.opponentName || 'Avversario';
     document.getElementById('mp-opponent-score').textContent = '0';
+    document.getElementById('emoji-tray').style.display = 'flex';
     startGame();
+}
+
+function showEmojiReaction(emoji, isMine) {
+    const anchor = isMine
+        ? document.getElementById('emoji-tray')
+        : document.getElementById('mp-opponent-bar');
+    const rect = (anchor || document.getElementById('grid')).getBoundingClientRect();
+    const el = document.createElement('div');
+    el.textContent = emoji;
+    el.className = 'emoji-float';
+    el.style.left = (rect.left + rect.width / 2 - 28) + 'px';
+    el.style.top  = (rect.top + rect.height / 2 - 28) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1400);
 }
 
 function saveMPResult(won, draw) {
@@ -298,6 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('mp-result-again').addEventListener('click', () => {
         document.getElementById('mp-result-modal').style.display = 'none';
+        document.getElementById('emoji-tray').style.display = 'none';
         MP.active = false;
         if (MP.ws) { MP.ws.close(); MP.ws = null; }
         document.getElementById('game-screen').style.display = 'none';
@@ -308,6 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('game-over-modal').style.display = 'none';
         document.getElementById('mp-leave-button').style.display = 'none';
         document.getElementById('mp-opponent-bar').style.display = 'none';
+        document.getElementById('emoji-tray').style.display = 'none';
         MP.active = false;
         if (MP.ws) { MP.ws.close(); MP.ws = null; }
         document.getElementById('game-screen').style.display = 'none';

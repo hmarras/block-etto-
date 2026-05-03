@@ -378,9 +378,30 @@ button:active {
         font-size: 48px;
     }
 
+    .header {
+        font-size: 13px;
+        padding: 10px 12px;
+        margin-bottom: 12px;
+    }
+
+    #grid {
+        margin: 10px auto;
+        padding: 6px;
+    }
+
+    #pieces {
+        padding: 12px;
+        gap: 6px;
+        margin-top: 12px;
+    }
+
+    .piece-container {
+        padding: 8px;
+    }
+
     .piece-cell {
-        width: 20px;
-        height: 20px;
+        width: 16px;
+        height: 16px;
     }
 }
 
@@ -607,4 +628,34 @@ button:active {
         order: -1;
         margin-bottom: 8px;
     }
+}
+
+/* ── Emoji Reactions ───────────────────────────────────────────────────────── */
+
+.emoji-btn {
+    font-size: 26px;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    border-radius: 10px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: transform 0.12s;
+    line-height: 1;
+}
+
+.emoji-btn:active {
+    transform: scale(1.4);
+}
+
+@keyframes emojiFloat {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-100px) scale(1.8); }
+}
+
+.emoji-float {
+    font-size: 56px;
+    animation: emojiFloat 1.4s ease-out forwards;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
 }

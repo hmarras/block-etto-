@@ -4,12 +4,12 @@ let currentTutorialStep = 0;
 const tutorialSteps = [
     {
         title: "Benvenuto in Block-etto! 🎮",
-        content: "Block-etto è un puzzle game dove devi piazzare i blocchi sulla griglia. Completa righe e colonne per eliminarle e fare punti!",
+        content: "Block-etto è un puzzle game dove piazzi blocchi sulla griglia, completi righe e colonne e fai il record. Ci vogliono 2 minuti per imparare — e una vita per padroneggiarlo!",
         visual: null
     },
     {
-        title: "La Griglia 8x8",
-        content: "Questa è la griglia di gioco. È composta da 8 righe e 8 colonne dove potrai piazzare i tuoi blocchi.",
+        title: "La Griglia 8×8",
+        content: "La griglia è composta da 8 righe e 8 colonne. Il tuo obiettivo: riempila strategicamente per eliminare quante più linee possibile!",
         visual: () => {
             return `
                 <div class="tutorial-visual">
@@ -21,14 +21,14 @@ const tutorialSteps = [
                             return `<div class="tutorial-cell ${isCenter ? 'filled' : ''}"></div>`;
                         }).join('')}
                     </div>
-                    <p style="margin-top: 12px; font-size: 14px;">Griglia 8x8</p>
+                    <p style="margin-top: 12px; font-size: 14px;">Griglia 8×8</p>
                 </div>
             `;
         }
     },
     {
-        title: "I Pezzi Disponibili",
-        content: "Avrai sempre 3 pezzi disponibili da piazzare. Ogni pezzo ha una forma diversa. Quando li usi tutti e 3, ne ricevi altri 3 nuovi!",
+        title: "I 3 Pezzi",
+        content: "Hai sempre 3 pezzi disponibili, usali nell'ordine che preferisci. Quando li usi tutti e 3, ne ricevi automaticamente 3 nuovi. Attenzione: non puoi scartarli!",
         visual: () => {
             return `
                 <div class="tutorial-visual">
@@ -58,7 +58,7 @@ const tutorialSteps = [
     },
     {
         title: "Come Piazzare i Blocchi",
-        content: "1. Clicca su un pezzo per selezionarlo<br>2. Clicca sulla griglia dove vuoi piazzarlo<br>3. Il pezzo verrà posizionato se c'è spazio!",
+        content: "1. Tocca un pezzo per selezionarlo (si illumina)<br>2. Tocca la cella della griglia dove vuoi piazzarlo<br>3. Il pezzo viene posizionato solo se c'è spazio libero!",
         visual: () => {
             return `
                 <div class="tutorial-visual">
@@ -77,14 +77,14 @@ const tutorialSteps = [
                             }).join('')}
                         </div>
                     </div>
-                    <p style="margin-top: 16px; font-size: 14px;">Seleziona il pezzo e cliccalo sulla griglia</p>
+                    <p style="margin-top: 16px; font-size: 14px;">Seleziona il pezzo → tocca la griglia</p>
                 </div>
             `;
         }
     },
     {
         title: "Completa Righe e Colonne",
-        content: "Quando completi un'intera riga o colonna, questa viene eliminata automaticamente! Le celle scompaiono e guadagni punti bonus.",
+        content: "Quando completi un'intera riga o colonna, viene eliminata automaticamente! Puoi eliminare più linee contemporaneamente per guadagnare un bonus combo.",
         visual: () => {
             return `
                 <div class="tutorial-visual">
@@ -105,7 +105,7 @@ const tutorialSteps = [
     },
     {
         title: "Sistema di Punteggio 🏆",
-        content: "Guadagni punti in diversi modi:<br>• 10 punti per ogni blocco piazzato<br>• 100 punti per ogni riga/colonna eliminata<br>• Bonus combo se elimini più linee insieme!",
+        content: "Guadagni punti in diversi modi:<br>• 10 punti per ogni blocco piazzato<br>• 100 punti per ogni riga/colonna eliminata<br>• Bonus combo se elimini più linee insieme!<br>• In modalità PRO, bonus per velocità di reazione",
         visual: () => {
             return `
                 <div class="tutorial-visual">
@@ -128,8 +128,59 @@ const tutorialSteps = [
         }
     },
     {
+        title: "Monete e Collezione 🎨",
+        content: "Ogni partita ti fa guadagnare monete in base al punteggio. Usa le monete nel negozio per sbloccare skin che cambiano l'aspetto della griglia e dei blocchi!",
+        visual: () => {
+            return `
+                <div class="tutorial-visual">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 36px;">🎮</span>
+                            <span style="font-size: 24px; color: rgba(255,255,255,0.6);">→</span>
+                            <span style="font-size: 36px;">🪙</span>
+                            <span style="font-size: 24px; color: rgba(255,255,255,0.6);">→</span>
+                            <span style="font-size: 36px;">🎨</span>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 20px; font-size: 13px; text-align: center;">
+                            Partita → Monete → <strong>Collezione</strong><br>
+                            <span style="color: rgba(255,255,255,0.7); font-size: 12px;">Sblocca skin nel negozio, equipaggiale nel guardaroba</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    },
+    {
+        title: "Sfida un Amico ⚔️",
+        content: "Gioca contro un amico in tempo reale! Crea una partita e condividi il codice (o il QR). I punteggi si aggiornano live. Puoi anche mandargli emoji per provocarlo! 😜",
+        visual: () => {
+            return `
+                <div class="tutorial-visual">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 10px 16px; text-align: center;">
+                                <div style="font-size: 22px;">📱</div>
+                                <div style="font-size: 11px; margin-top: 4px;">Tu</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 20px;">⚔️</div>
+                                <div style="font-size: 10px; color: rgba(255,255,255,0.5);">in tempo reale</div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 10px 16px; text-align: center;">
+                                <div style="font-size: 22px;">📱</div>
+                                <div style="font-size: 11px; margin-top: 4px;">Amico</div>
+                            </div>
+                        </div>
+                        <div style="font-size: 28px; letter-spacing: 4px;">😜 👊 🔥 💀 👏</div>
+                        <p style="font-size: 12px; color: rgba(255,255,255,0.7); margin: 0;">Manda emoji al tuo avversario durante la partita</p>
+                    </div>
+                </div>
+            `;
+        }
+    },
+    {
         title: "Game Over",
-        content: "Il gioco finisce quando non puoi più piazzare nessuno dei 3 pezzi disponibili sulla griglia. Pianifica bene le tue mosse!",
+        content: "Il gioco finisce quando non puoi più piazzare nessuno dei 3 pezzi sulla griglia. In modalità PRO finisce anche se lasci scadere il timer. Pianifica bene le tue mosse!",
         visual: () => {
             return `
                 <div class="tutorial-visual">
@@ -137,8 +188,6 @@ const tutorialSteps = [
                         ${Array(36).fill(0).map((_, i) => {
                             const row = Math.floor(i / 6);
                             const col = i % 6;
-                            // Griglia quasi piena ma senza righe/colonne complete
-                            // Pattern a scacchiera disordinato per evitare linee complete
                             const isEmpty =
                                 (row === 0 && col === 1) ||
                                 (row === 1 && col === 3) ||
@@ -158,7 +207,7 @@ const tutorialSteps = [
     },
     {
         title: "Pronto a Giocare! 🚀",
-        content: "Ora sai tutto! Ricorda:<br>• Pianifica le tue mosse<br>• Cerca di completare più linee insieme<br>• Non lasciare la griglia troppo piena<br><br>Buon divertimento!",
+        content: "Ora sai tutto! Ricorda:<br>• Pianifica le mosse e punta alle combo<br>• Guadagna monete e sblocca skin nella Collezione<br>• Sfida un amico con le emoji 😜<br>• Prova la modalità PRO per una sfida vera!",
         visual: () => {
             return `
                 <div class="tutorial-visual">
