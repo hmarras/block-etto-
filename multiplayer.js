@@ -22,7 +22,14 @@ const MP = {
     connect() {
         return new Promise((resolve, reject) => {
             this.ws = new WebSocket(WS_SERVER);
-            this.ws.onopen = resolve;
+            this.ws.onopen = () => {
+                // Sincronizza il record locale al server (il server aggiorna se è più alto)
+                const localBest = JSON.parse(localStorage.getItem('globalBest') || 'null');
+                if (localBest && localBest.score > 0) {
+                    this.ws.send(JSON.stringify({ type: 'sync_global_best', name: localBest.name, score: localBest.score }));
+                }
+                resolve();
+            };
             this.ws.onerror = reject;
             this.ws.onmessage = (e) => this.handleMessage(JSON.parse(e.data));
             this.ws.onclose = () => {
@@ -142,6 +149,15 @@ const MP = {
 
             case 'rematch_requested':
                 document.getElementById('mp-rematch-btn').textContent = `⚔️ Rivincita (${MP.opponentName} è pronto!)`;
+                break;
+
+            case 'global_best':
+                if (msg.score > 0 && msg.name) {
+                    const current = JSON.parse(localStorage.getItem('globalBest') || '{"score":0}');
+                    if (msg.score > (current.score || 0)) {
+                        localStorage.setItem('globalBest', JSON.stringify({ name: msg.name, score: msg.score }));
+                    }
+                }
                 break;
 
             case 'opponent_emoji':

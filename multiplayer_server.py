@@ -11,6 +11,21 @@ import string
 import os
 
 rooms = {}  # code → {players, names, scores, done, rematch}
+global_best = {'name': None, 'score': 0}  # record assoluto in memoria
+connected_clients = set()  # tutti i WebSocket connessi
+
+
+def _gb_msg():
+    return json.dumps({'type': 'global_best', 'name': global_best['name'], 'score': global_best['score']})
+
+
+async def _broadcast_global_best():
+    msg = _gb_msg()
+    for ws in list(connected_clients):
+        try:
+            await ws.send(msg)
+        except Exception:
+            pass
 
 
 def make_room_code():
@@ -26,6 +41,13 @@ def reset_room(room):
 async def ws_handler(websocket):
     player_index = None
     room_code = None
+    connected_clients.add(websocket)
+
+    # Invia subito il record globale al nuovo client
+    try:
+        await websocket.send(_gb_msg())
+    except Exception:
+        pass
 
     try:
         async for raw in websocket:
@@ -93,6 +115,13 @@ async def ws_handler(websocket):
                             'score': msg['score'],
                         }))
 
+            elif msg['type'] == 'sync_global_best':
+                score = msg.get('score', 0)
+                name = msg.get('name', '')
+                if score > global_best['score'] and name:
+                    global_best['name'] = name
+                    global_best['score'] = score
+
             elif msg['type'] == 'game_over':
                 if room_code in rooms:
                     room = rooms[room_code]
@@ -106,6 +135,14 @@ async def ws_handler(websocket):
                             'type': 'opponent_game_over',
                             'score': msg['score'],
                         }))
+
+                    # Aggiorna record globale e broadcast se battuto
+                    player_score = msg['score'] or 0
+                    player_name = room['names'][player_index] or ''
+                    if player_score > global_best['score'] and player_name:
+                        global_best['name'] = player_name
+                        global_best['score'] = player_score
+                        await _broadcast_global_best()
 
                     if all(room['done']):
                         await _send_results(room)
@@ -142,6 +179,7 @@ async def ws_handler(websocket):
     except Exception as e:
         print(f"WS error: {e}")
     finally:
+        connected_clients.discard(websocket)
         if room_code and room_code in rooms:
             room = rooms[room_code]
             opp_idx = 1 - player_index if player_index is not None else None
