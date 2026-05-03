@@ -240,15 +240,57 @@ function shopBuyAndRefresh(key) {
 
 // ── Guardaroba ─────────────────────────────────────────────────────────────────
 
+const WARDROBE_SECTIONS = [
+    { key: 'all',    label: 'Tutte le skin' },
+    { key: 'main',   label: '⭐ Principali' },
+    { key: 'calcio', label: '⚽ Calcio' },
+    { key: 'games',  label: '🎮 Videogiochi' },
+];
+
+let _wardrobeSection = 'all';
+
+function wardrobeSetSection(val) {
+    _wardrobeSection = val;
+    wardrobeRender();
+}
+
 function wardrobeRender() {
     const owned = shopGetOwned();
     const active = shopGetActive();
-    const grid = document.getElementById('wardrobe-grid');
+    const container = document.getElementById('wardrobe-grid');
     const subtitle = document.getElementById('wardrobe-subtitle');
+
+    let filterEl = document.getElementById('wardrobe-filter');
+    if (!filterEl) {
+        filterEl = document.createElement('div');
+        filterEl.id = 'wardrobe-filter';
+        filterEl.style.marginBottom = '14px';
+        container.parentNode.insertBefore(filterEl, container);
+    }
 
     subtitle.textContent = `${owned.length} skin sbloccate`;
 
-    grid.innerHTML = owned.map(key => {
+    // Sezioni con almeno una skin posseduta
+    const activeSections = WARDROBE_SECTIONS.slice(1).filter(s =>
+        SKIN_CATALOG.some(skin => skin.section === s.key && owned.includes(skin.key))
+    );
+
+    // Dropdown: mostralo solo se ci sono più sezioni disponibili
+    if (activeSections.length > 1) {
+        const options = [WARDROBE_SECTIONS[0], ...activeSections].map(s =>
+            `<option value="${s.key}" ${_wardrobeSection === s.key ? 'selected' : ''}>${s.label}</option>`
+        ).join('');
+        filterEl.innerHTML = `
+            <select onchange="wardrobeSetSection(this.value)"
+                style="width:100%;padding:9px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.12);color:white;font-size:13px;font-weight:600;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22 viewBox=%220 0 12 8%22><path fill=%22white%22 d=%22M6 8L0 0h12z%22/></svg>');background-repeat:no-repeat;background-position:right 12px center;cursor:pointer;outline:none;box-sizing:border-box;">
+                ${options}
+            </select>`;
+    } else {
+        filterEl.innerHTML = '';
+        _wardrobeSection = 'all';
+    }
+
+    const buildCard = (key) => {
         const skin = SKIN_CATALOG.find(s => s.key === key);
         if (!skin) return '';
         const isActive = active === key;
@@ -256,11 +298,9 @@ function wardrobeRender() {
         const previewBg = isNeon ? '#0a0a12' : 'rgba(0,0,0,0.32)';
         const cardBorder = isActive ? '2px solid rgba(255,255,255,0.85)' : '1px solid rgba(255,255,255,0.18)';
         const cardBg = isActive ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.1)';
-
         const btn = isActive
             ? `<span style="font-size:10px;font-weight:800;color:#43e97b;">✓ Equipaggiata</span>`
             : `<button onclick="shopEquip('${key}');closeWardrobeModal();openWardrobeModal();" style="font-size:10px;font-weight:800;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);color:white;padding:5px 12px;border-radius:8px;cursor:pointer;min-width:0;">Equipaggia</button>`;
-
         return `
             <div style="background:${cardBg};border:${cardBorder};border-radius:16px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:10px;">
                 <div style="display:grid;grid-template-columns:repeat(3,26px);grid-template-rows:repeat(3,26px);gap:3px;background:${previewBg};padding:10px;border-radius:12px;">
@@ -269,7 +309,21 @@ function wardrobeRender() {
                 <div style="color:white;font-size:12px;font-weight:700;">${skin.emoji} ${skin.name}</div>
                 ${btn}
             </div>`;
-    }).join('');
+    };
+
+    if (_wardrobeSection === 'all') {
+        // Vista "Tutte": sezioni con intestazione
+        container.innerHTML = activeSections.map(section => {
+            const sectionOwned = SKIN_CATALOG.filter(s => s.section === section.key && owned.includes(s.key));
+            return `
+                <div style="grid-column:1/-1;color:rgba(255,255,255,0.55);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-top:8px;margin-bottom:2px;">${section.label}</div>
+                ${sectionOwned.map(s => buildCard(s.key)).join('')}`;
+        }).join('');
+    } else {
+        // Vista filtrata: solo le skin della sezione selezionata
+        const filtered = SKIN_CATALOG.filter(s => s.section === _wardrobeSection && owned.includes(s.key));
+        container.innerHTML = filtered.map(s => buildCard(s.key)).join('');
+    }
 }
 
 // ── Modal open/close ───────────────────────────────────────────────────────────
