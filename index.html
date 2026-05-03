@@ -16,7 +16,7 @@
            cache del browser e ricarica prima che qualsiasi altro script giri.
            Aggiornare APP_V ad ogni deploy insieme a CACHE_VERSION in sw.js. */
         (function () {
-            var APP_V = '20260503f';
+            var APP_V = '20260503g';
             if (localStorage.getItem('_bv') !== APP_V) {
                 localStorage.setItem('_bv', APP_V);
                 if ('caches' in window) {
@@ -74,7 +74,7 @@
         <div id="welcome-goal" style="margin-top: 20px; max-width: 320px; width: 100%;"></div>
 
         <p style="color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 32px;">by Dario Marras</p>
-        <p style="color: rgba(255,255,255,0.35); font-size: 10px; margin-top: 4px;">v 3 maggio 2026 · 21:21</p>
+        <p style="color: rgba(255,255,255,0.35); font-size: 10px; margin-top: 4px;">v 3 maggio 2026 · 21:29</p>
     </div>
 
     <!-- Stats Modal -->
@@ -207,7 +207,7 @@
         </div>
         <div id="grid"></div>
         <div id="pieces"></div>
-        <div id="emoji-tray" style="display:none; justify-content:center; gap:10px; margin-top:16px; padding:10px 16px; background:rgba(255,255,255,0.08); border-radius:16px;">
+        <div id="emoji-tray" style="display:none; flex-direction:row; flex-wrap:nowrap; justify-content:center; gap:8px; margin-top:12px; padding:10px 12px; background:rgba(255,255,255,0.08); border-radius:16px;">
             <button class="emoji-btn" onclick="MP.sendEmoji('😜')">😜</button>
             <button class="emoji-btn" onclick="MP.sendEmoji('👊')">👊</button>
             <button class="emoji-btn" onclick="MP.sendEmoji('🔥')">🔥</button>

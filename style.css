@@ -284,6 +284,16 @@ button:active {
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
+/* Override: final-score paragraph must not inherit the 48px hero size */
+#final-score {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: none;
+    -webkit-text-fill-color: rgba(255,255,255,0.9);
+    text-fill-color: rgba(255,255,255,0.9);
+}
+
 /* Game Over Modal */
 #game-over-modal {
     position: fixed;
@@ -637,14 +647,26 @@ button:active {
     background: rgba(255,255,255,0.1);
     border: none;
     border-radius: 10px;
-    padding: 6px 10px;
+    padding: 8px 10px;
     cursor: pointer;
     transition: transform 0.12s;
     line-height: 1;
+    /* Reset global button defaults */
+    min-width: 0;
+    box-shadow: none;
+    text-shadow: none;
+    font-weight: normal;
+    flex-shrink: 0;
 }
 
 .emoji-btn:active {
     transform: scale(1.4);
+    box-shadow: none;
+}
+
+.emoji-btn:hover {
+    transform: none;
+    box-shadow: none;
 }
 
 @keyframes emojiFloat {
