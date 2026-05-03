@@ -309,8 +309,12 @@ async function onCellClick(row, col) {
     const piece = currentPieces[selectedPieceIndex];
     if (!piece) return;
 
-    if (canPlacePiece(piece.shape, row, col)) {
-        placePiece(piece.shape, row, col);
+    const off = getFirstFilledOffset(piece.shape);
+    const startRow = row - off.r;
+    const startCol = col - off.c;
+
+    if (canPlacePiece(piece.shape, startRow, startCol)) {
+        placePiece(piece.shape, startRow, startCol);
         currentPieces[selectedPieceIndex] = null;
         selectedPieceIndex = null;
 
@@ -328,6 +332,18 @@ async function onCellClick(row, col) {
     }
 }
 
+// Restituisce l'offset (r,c) della prima cella piena nel bounding box.
+// Usato come ancora di piazzamento: il tap cade sulla prima cella piena,
+// non sull'angolo top-left del bounding box (che può essere vuoto, es. L↶).
+function getFirstFilledOffset(shape) {
+    for (let r = 0; r < shape.length; r++) {
+        for (let c = 0; c < shape[r].length; c++) {
+            if (shape[r][c] === 1) return { r, c };
+        }
+    }
+    return { r: 0, c: 0 };
+}
+
 function canPlacePiece(shape, startRow, startCol) {
     for (let r = 0; r < shape.length; r++) {
         for (let c = 0; c < shape[r].length; c++) {
@@ -335,7 +351,7 @@ function canPlacePiece(shape, startRow, startCol) {
                 const gridRow = startRow + r;
                 const gridCol = startCol + c;
 
-                if (gridRow >= GRID_SIZE || gridCol >= GRID_SIZE) return false;
+                if (gridRow < 0 || gridRow >= GRID_SIZE || gridCol < 0 || gridCol >= GRID_SIZE) return false;
                 if (grid[gridRow][gridCol] === 1) return false;
             }
         }
@@ -594,11 +610,15 @@ function showPreview(row, col) {
     clearPreview();
     if (selectedPieceIndex === null) return;
     const piece = currentPieces[selectedPieceIndex];
-    if (!piece || !canPlacePiece(piece.shape, row, col)) return;
+    if (!piece) return;
+    const off = getFirstFilledOffset(piece.shape);
+    const startRow = row - off.r;
+    const startCol = col - off.c;
+    if (!canPlacePiece(piece.shape, startRow, startCol)) return;
     piece.shape.forEach((r, ri) => {
         r.forEach((cell, ci) => {
             if (cell === 1) {
-                const el = document.querySelector(`[data-row="${row + ri}"][data-col="${col + ci}"]`);
+                const el = document.querySelector(`[data-row="${startRow + ri}"][data-col="${startCol + ci}"]`);
                 if (el) el.classList.add('preview');
             }
         });
