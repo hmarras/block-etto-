@@ -187,9 +187,7 @@ Gestisce la cache e forza il reload automatico su tutti i client (incluse PWA su
 - `skipWaiting()` + `clients.claim()`: il nuovo SW si attiva subito
 - `controllerchange` in `index.html`: la pagina si ricarica automaticamente quando il nuovo SW prende controllo
 
-**Per forzare aggiornamento a tutti gli utenti:** incrementare `CACHE_VERSION` in `sw.js` (es. `'v2'` → `'v3'`) prima del push. Il browser detecta che sw.js è cambiato e aggiorna tutti i client automaticamente.
-
-**Versione corrente:** `v2`
+**Per forzare aggiornamento a tutti gli utenti:** incrementare `CACHE_VERSION` in `sw.js` e `APP_V` in `index.html` prima del push (vedi sezione Deploy).
 
 ---
 
@@ -249,6 +247,15 @@ Ogni tema ha colori blocchi complementari allo sfondo. Salvato in localStorage.
 ## Deploy
 
 ### GitHub Pages (frontend)
+
+**IMPORTANTE — Prima di ogni push, Claude deve aggiornare in automatico queste 3 cose:**
+
+1. `sw.js` → incrementare `CACHE_VERSION` (es. `'v3'` → `'v4'`)
+2. `index.html` → aggiornare `APP_V` con la data odierna in formato `'YYYYMMDD'` (es. `'20260503'`)
+3. `index.html` → aggiornare la stringa visibile in fondo alla welcome screen con data e orario del commit (es. `v 3 maggio 2026 · 14:32`)
+
+Per l'orario usare l'output di `git log -1 --format="%ci"` dopo il commit, oppure l'orario corrente al momento del push.
+
 ```bash
 cd "/Users/hmarras/Documents/Personale/Progetti/Block etto"
 git add .
