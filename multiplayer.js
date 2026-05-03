@@ -150,7 +150,12 @@ const MP = {
 
     showDisconnected() {
         this.active = false;
-        showMPError(`${this.opponentName || 'L\'avversario'} si è disconnesso.`);
+        document.getElementById('game-over-modal').style.display = 'none';
+        document.getElementById('mp-leave-button').style.display = 'none';
+        document.getElementById('mp-opponent-bar').style.display = 'none';
+        alert(`⚠️ ${this.opponentName || 'L\'avversario'} si è disconnesso.`);
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('welcome-screen').style.display = 'flex';
     },
 };
 
@@ -293,6 +298,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('mp-result-again').addEventListener('click', () => {
         document.getElementById('mp-result-modal').style.display = 'none';
+        MP.active = false;
+        if (MP.ws) { MP.ws.close(); MP.ws = null; }
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('welcome-screen').style.display = 'flex';
+    });
+
+    document.getElementById('mp-leave-button').addEventListener('click', () => {
+        document.getElementById('game-over-modal').style.display = 'none';
+        document.getElementById('mp-leave-button').style.display = 'none';
+        document.getElementById('mp-opponent-bar').style.display = 'none';
         MP.active = false;
         if (MP.ws) { MP.ws.close(); MP.ws = null; }
         document.getElementById('game-screen').style.display = 'none';

@@ -34,6 +34,22 @@ document.addEventListener('DOMContentLoaded', () => {
     setupWelcomeScreen();
     setupColorSelector();
     document.addEventListener('skinChanged', e => { activeSkin = e.detail; });
+
+    const gridEl = document.getElementById('grid');
+    gridEl.addEventListener('mouseleave', clearPreview);
+    gridEl.addEventListener('touchmove', (e) => {
+        if (selectedPieceIndex === null) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        const el = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (el && el.dataset.row !== undefined && el.dataset.col !== undefined) {
+            showPreview(parseInt(el.dataset.row), parseInt(el.dataset.col));
+        } else {
+            clearPreview();
+        }
+    }, { passive: false });
+    gridEl.addEventListener('touchend', clearPreview);
+    gridEl.addEventListener('touchcancel', clearPreview);
 });
 
 function loadPlayerData() {
@@ -237,6 +253,7 @@ function renderGrid() {
             cell.dataset.row = row;
             cell.dataset.col = col;
             cell.addEventListener('click', () => onCellClick(row, col));
+            cell.addEventListener('mouseenter', () => showPreview(row, col));
             gridEl.appendChild(cell);
         }
     }
@@ -454,13 +471,17 @@ function gameOver() {
             document.getElementById('game-over-message').textContent = `Hai finito con ${score.toLocaleString()} punti! Attendi ${MP.opponentName}...`;
             document.getElementById('final-score').textContent = '';
             document.getElementById('piece-stats').innerHTML = '';
+            document.getElementById('wallet-earned-notice').innerHTML = '';
+            document.getElementById('engagement-notice').innerHTML = '';
             document.getElementById('game-over-modal').style.display = 'flex';
             document.getElementById('play-again-button').style.display = 'none';
+            document.getElementById('mp-leave-button').style.display = '';
             return;
         }
     }
 
     saveGameStats();
+    document.getElementById('mp-leave-button').style.display = 'none';
     const { earned, multiplier } = earnWalletPoints();
 
     document.getElementById('play-again-button').style.display = '';
@@ -563,6 +584,25 @@ function generatePieceHTML(shape) {
 
     html += '</div>';
     return html;
+}
+
+function clearPreview() {
+    document.querySelectorAll('.cell.preview').forEach(c => c.classList.remove('preview'));
+}
+
+function showPreview(row, col) {
+    clearPreview();
+    if (selectedPieceIndex === null) return;
+    const piece = currentPieces[selectedPieceIndex];
+    if (!piece || !canPlacePiece(piece.shape, row, col)) return;
+    piece.shape.forEach((r, ri) => {
+        r.forEach((cell, ci) => {
+            if (cell === 1) {
+                const el = document.querySelector(`[data-row="${row + ri}"][data-col="${col + ci}"]`);
+                if (el) el.classList.add('preview');
+            }
+        });
+    });
 }
 
 function applySkinToCell(el, skin, row, col, pieceIndex) {

@@ -12,6 +12,22 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="skins.css">
     <script>
+        /* Hard-refresh su Chrome mobile: se la versione cambia svuota tutte le
+           cache del browser e ricarica prima che qualsiasi altro script giri.
+           Aggiornare APP_V ad ogni deploy insieme a CACHE_VERSION in sw.js. */
+        (function () {
+            var APP_V = '20260503';
+            if (localStorage.getItem('_bv') !== APP_V) {
+                localStorage.setItem('_bv', APP_V);
+                if ('caches' in window) {
+                    caches.keys().then(function (ks) {
+                        return Promise.all(ks.map(function (k) { return caches.delete(k); }));
+                    }).then(function () { location.reload(); });
+                }
+            }
+        })();
+    </script>
+    <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js');
             navigator.serviceWorker.addEventListener('controllerchange', () => {
@@ -56,6 +72,7 @@
         <div id="welcome-goal" style="margin-top: 20px; max-width: 320px; width: 100%;"></div>
 
         <p style="color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 32px;">by Dario Marras</p>
+        <p style="color: rgba(255,255,255,0.35); font-size: 10px; margin-top: 4px;">v 3 maggio 2026</p>
     </div>
 
     <!-- Stats Modal -->
@@ -177,6 +194,7 @@
             <div id="engagement-notice"></div>
             <div id="piece-stats"></div>
             <button id="play-again-button">Gioca Ancora</button>
+            <button id="mp-leave-button" style="display:none; margin-top:10px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:white; font-size:14px; font-weight:600; padding:12px 24px; border-radius:12px; cursor:pointer; min-width:0; width:100%;">← Torna al menu</button>
         </div>
     </div>
 

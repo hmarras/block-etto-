@@ -97,7 +97,7 @@ function shopBuildPreviewCells(key) {
 
     for (let i = 0; i < 9; i++) {
         if (!activeIndices.includes(i)) {
-            html += `<div style="width:22px;height:22px;background:rgba(255,255,255,0.08);border-radius:4px;"></div>`;
+            html += `<div style="width:22px;height:22px;background:rgba(255,255,255,0.42);border-radius:4px;"></div>`;
             continue;
         }
 
@@ -126,7 +126,7 @@ function shopBuildCard(skin) {
     const state = shopGetCardState(skin.key);
     const isNeon = skin.key === 'neon';
 
-    const previewBg = isNeon ? '#0a0a12' : 'rgba(0,0,0,0.2)';
+    const previewBg = isNeon ? '#0a0a12' : 'rgba(0,0,0,0.32)';
     const cardBorder = state === 'owned_active' ? '2px solid rgba(255,255,255,0.8)' : '1px solid rgba(255,255,255,0.15)';
     const cardBg = state === 'owned_active' ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)';
 
@@ -230,7 +230,7 @@ function wardrobeRender() {
         if (!skin) return '';
         const isActive = active === key;
         const isNeon = key === 'neon';
-        const previewBg = isNeon ? '#0a0a12' : 'rgba(0,0,0,0.2)';
+        const previewBg = isNeon ? '#0a0a12' : 'rgba(0,0,0,0.32)';
         const cardBorder = isActive ? '2px solid rgba(255,255,255,0.85)' : '1px solid rgba(255,255,255,0.18)';
         const cardBg = isActive ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.1)';
 
