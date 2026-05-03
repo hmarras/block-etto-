@@ -300,7 +300,7 @@ function wardrobeRender() {
         const cardBg = isActive ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.1)';
         const btn = isActive
             ? `<span style="font-size:10px;font-weight:800;color:#43e97b;">✓ Equipaggiata</span>`
-            : `<button onclick="shopEquip('${key}');closeWardrobeModal();openWardrobeModal();" style="font-size:10px;font-weight:800;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);color:white;padding:5px 12px;border-radius:8px;cursor:pointer;min-width:0;">Equipaggia</button>`;
+            : `<button onclick="shopEquip('${key}')" style="font-size:10px;font-weight:800;background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);color:white;padding:5px 12px;border-radius:8px;cursor:pointer;min-width:0;">Equipaggia</button>`;
         return `
             <div style="background:${cardBg};border:${cardBorder};border-radius:16px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:10px;">
                 <div style="display:grid;grid-template-columns:repeat(3,26px);grid-template-rows:repeat(3,26px);gap:3px;background:${previewBg};padding:10px;border-radius:12px;">
@@ -326,27 +326,49 @@ function wardrobeRender() {
     }
 }
 
-// ── Modal open/close ───────────────────────────────────────────────────────────
+// ── Collezione Modal (Shop + Guardaroba con tab) ───────────────────────────────
 
-function openShopModal() {
+function openCollezioneModal(tab = 'shop') {
     shopRenderCards();
     shopRefreshUI();
+    switchCollezioneTab(tab);
     document.getElementById('shop-modal').style.display = 'flex';
 }
 
-function closeShopModal() {
+function closeCollezioneModal() {
     document.getElementById('shop-modal').style.display = 'none';
     showEngagementNotice('welcome-goal', true);
 }
 
-function openWardrobeModal() {
-    wardrobeRender();
-    document.getElementById('wardrobe-modal').style.display = 'flex';
+function switchCollezioneTab(tab) {
+    const shopPane     = document.getElementById('collezione-shop-pane');
+    const wardrobePane = document.getElementById('collezione-wardrobe-pane');
+    const shopBtn      = document.getElementById('tab-shop-btn');
+    const wardrobeBtn  = document.getElementById('tab-wardrobe-btn');
+
+    if (tab === 'shop') {
+        shopPane.style.display     = '';
+        wardrobePane.style.display = 'none';
+        shopBtn.style.background   = 'white';
+        shopBtn.style.color        = '#5a3a9b';
+        wardrobeBtn.style.background = 'transparent';
+        wardrobeBtn.style.color      = 'rgba(255,255,255,0.7)';
+    } else {
+        shopPane.style.display     = 'none';
+        wardrobePane.style.display = '';
+        wardrobeBtn.style.background = 'white';
+        wardrobeBtn.style.color      = '#5a3a9b';
+        shopBtn.style.background   = 'transparent';
+        shopBtn.style.color        = 'rgba(255,255,255,0.7)';
+        wardrobeRender();
+    }
 }
 
-function closeWardrobeModal() {
-    document.getElementById('wardrobe-modal').style.display = 'none';
-}
+// Alias mantenuti per compatibilità interna
+function openShopModal()     { openCollezioneModal('shop'); }
+function openWardrobeModal() { openCollezioneModal('wardrobe'); }
+function closeShopModal()    { closeCollezioneModal(); }
+function closeWardrobeModal(){ /* tab integrata, nessuna azione */ }
 
 // ── Messaggi di engagement ─────────────────────────────────────────────────────
 
@@ -511,21 +533,11 @@ function shopCheckPromoCode(value) {
 document.addEventListener('DOMContentLoaded', () => {
     showEngagementNotice('welcome-goal', true);
 
-    document.getElementById('shop-button').addEventListener('click', openShopModal);
-    document.getElementById('wardrobe-button').addEventListener('click', openWardrobeModal);
-
-    document.getElementById('shop-close-btn').addEventListener('click', closeShopModal);
-    document.getElementById('wardrobe-close-btn').addEventListener('click', closeWardrobeModal);
-    document.getElementById('wardrobe-shop-link').addEventListener('click', () => {
-        closeWardrobeModal();
-        openShopModal();
-    });
+    document.getElementById('collezione-button').addEventListener('click', () => openCollezioneModal('shop'));
+    document.getElementById('shop-close-btn').addEventListener('click', closeCollezioneModal);
 
     // Chiudi cliccando sull'overlay
     document.getElementById('shop-modal').addEventListener('click', e => {
-        if (e.target === document.getElementById('shop-modal')) closeShopModal();
-    });
-    document.getElementById('wardrobe-modal').addEventListener('click', e => {
-        if (e.target === document.getElementById('wardrobe-modal')) closeWardrobeModal();
+        if (e.target === document.getElementById('shop-modal')) closeCollezioneModal();
     });
 });

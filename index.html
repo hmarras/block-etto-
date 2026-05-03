@@ -16,7 +16,7 @@
            cache del browser e ricarica prima che qualsiasi altro script giri.
            Aggiornare APP_V ad ogni deploy insieme a CACHE_VERSION in sw.js. */
         (function () {
-            var APP_V = '20260503d';
+            var APP_V = '20260503e';
             if (localStorage.getItem('_bv') !== APP_V) {
                 localStorage.setItem('_bv', APP_V);
                 if ('caches' in window) {
@@ -44,7 +44,11 @@
             Piazza i blocchi, completa le linee, fai il record!
         </p>
         <input type="text" id="player-name" placeholder="Il tuo nome" maxlength="20">
-        <button id="start-button">🚀 Inizia Gioco</button>
+        <!-- Riga principale: Inizia Gioco + Come funziona -->
+        <div style="display:flex;gap:8px;max-width:320px;width:100%;">
+            <button id="start-button" style="flex:1;min-width:0;padding:18px 20px;font-size:16px;">🚀 Inizia Gioco</button>
+            <button id="how-to-play-button" style="flex:0 0 auto;min-width:0;padding:18px 18px;font-size:18px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:16px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,0.3);">❓</button>
+        </div>
 
         <!-- Color Theme Selector -->
         <div style="margin-top: 24px;">
@@ -61,64 +65,63 @@
 
         <button id="mp-button" style="margin-top: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;">⚔️ Sfida un amico</button>
 
-        <button id="stats-button" style="margin-top: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;">📊 Le tue stats</button>
+        <button id="stats-button" style="margin-top: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;">📊 Stats</button>
 
-        <button id="how-to-play-button" style="margin-top: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;">❓ Come funziona</button>
-
-        <button id="shop-button" style="margin-top: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;">🛍️ Shop</button>
-
-        <button id="wardrobe-button" style="margin-top: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;">👕 Guardaroba</button>
+        <button id="collezione-button" style="margin-top: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;">🎨 Collezione</button>
 
         <div id="welcome-goal" style="margin-top: 20px; max-width: 320px; width: 100%;"></div>
 
         <p style="color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 32px;">by Dario Marras</p>
-        <p style="color: rgba(255,255,255,0.35); font-size: 10px; margin-top: 4px;">v 3 maggio 2026 · 20:46</p>
+        <p style="color: rgba(255,255,255,0.35); font-size: 10px; margin-top: 4px;">v 3 maggio 2026 · 20:57</p>
     </div>
 
     <!-- Stats Modal -->
     <div id="stats-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); z-index:2000; align-items:center; justify-content:center;">
         <div style="background:linear-gradient(135deg,#667eea,#764ba2); border-radius:24px; padding:32px 24px; max-width:360px; width:90%; position:relative; max-height:85vh; overflow-y:auto;">
             <button id="stats-close-btn" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.2);border:none;color:white;font-size:22px;width:34px;height:34px;border-radius:50%;cursor:pointer;padding:0;min-width:0;">×</button>
-            <h2 style="color:white;font-size:22px;text-align:center;margin-bottom:24px;">📊 Le tue statistiche</h2>
+            <h2 style="color:white;font-size:22px;text-align:center;margin-bottom:24px;">📊 Stats</h2>
             <div id="stats-content"></div>
         </div>
     </div>
 
-    <!-- Shop Modal -->
+    <!-- Collezione Modal (Shop + Guardaroba) -->
     <div id="shop-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); z-index:2500; align-items:center; justify-content:center;">
         <div style="background:linear-gradient(135deg,#667eea,#764ba2); border-radius:24px; padding:28px 20px; max-width:380px; width:92%; position:relative; max-height:88vh; overflow-y:auto; box-sizing:border-box;">
             <button id="shop-close-btn" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.2);border:none;color:white;font-size:22px;width:34px;height:34px;border-radius:50%;cursor:pointer;padding:0;min-width:0;">×</button>
-            <h2 style="color:white;font-size:20px;text-align:center;margin-bottom:6px;">🛍️ Shop</h2>
-            <div id="shop-wallet-display" style="text-align:center;margin-bottom:20px;"></div>
-            <div style="color:rgba(255,255,255,0.65);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">Skin principali</div>
-            <div id="shop-skins-main" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;"></div>
-            <div style="color:rgba(255,255,255,0.65);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">⚽ Calcio</div>
-            <div id="shop-skins-calcio" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;"></div>
-            <div style="color:rgba(255,255,255,0.65);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">🎮 Videogiochi</div>
-            <div id="shop-skins-games" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;"></div>
-            <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;">
-                <div style="display:flex;gap:8px;">
-                    <input id="shop-promo-input" type="text" inputmode="numeric" placeholder="Codice promo" maxlength="4"
-                        style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:14px;text-align:center;letter-spacing:4px;box-sizing:border-box;outline:none;"
-                        onkeydown="if(event.key==='Enter') shopCheckPromoCode(document.getElementById('shop-promo-input').value)">
-                    <button onclick="shopCheckPromoCode(document.getElementById('shop-promo-input').value)"
-                        style="padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;min-width:0;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);">Invia</button>
-                </div>
-                <div id="shop-promo-msg" style="text-align:center;font-size:12px;margin-top:8px;min-height:16px;"></div>
-            </div>
-        </div>
-    </div>
+            <h2 style="color:white;font-size:20px;text-align:center;margin-bottom:12px;">🎨 Collezione</h2>
 
-    <!-- Guardaroba Modal -->
-    <div id="wardrobe-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); z-index:2500; align-items:center; justify-content:center;">
-        <div style="background:linear-gradient(135deg,#667eea,#764ba2); border-radius:24px; padding:28px 20px; max-width:360px; width:92%; position:relative; max-height:85vh; overflow-y:auto; box-sizing:border-box;">
-            <button id="wardrobe-close-btn" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.2);border:none;color:white;font-size:22px;width:34px;height:34px;border-radius:50%;cursor:pointer;padding:0;min-width:0;">×</button>
-            <h2 style="color:white;font-size:20px;text-align:center;margin-bottom:4px;">👕 Guardaroba</h2>
-            <p id="wardrobe-subtitle" style="color:rgba(255,255,255,0.6);font-size:12px;text-align:center;margin-bottom:12px;"></p>
-            <div id="wardrobe-filter" style="margin-bottom:14px;"></div>
-            <div id="wardrobe-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"></div>
-            <div style="text-align:center;margin-top:16px;">
-                <button id="wardrobe-shop-link" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:10px 20px;border-radius:12px;cursor:pointer;font-size:13px;font-weight:600;min-width:0;">🛍️ Vai allo Shop</button>
+            <!-- Tab pills -->
+            <div style="display:flex;gap:4px;background:rgba(0,0,0,0.2);border-radius:12px;padding:4px;margin-bottom:16px;">
+                <button id="tab-shop-btn" onclick="switchCollezioneTab('shop')" style="flex:1;font-size:13px;font-weight:700;padding:8px 12px;border-radius:9px;border:none;cursor:pointer;min-width:0;transition:all 0.2s;background:white;color:#5a3a9b;">🛍️ Shop</button>
+                <button id="tab-wardrobe-btn" onclick="switchCollezioneTab('wardrobe')" style="flex:1;font-size:13px;font-weight:700;padding:8px 12px;border-radius:9px;border:none;cursor:pointer;min-width:0;transition:all 0.2s;background:transparent;color:rgba(255,255,255,0.7);">👕 Guardaroba</button>
+            </div>
+
+            <!-- Pannello Shop -->
+            <div id="collezione-shop-pane">
+                <div id="shop-wallet-display" style="text-align:center;margin-bottom:20px;"></div>
+                <div style="color:rgba(255,255,255,0.65);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">Skin principali</div>
+                <div id="shop-skins-main" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;"></div>
+                <div style="color:rgba(255,255,255,0.65);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">⚽ Calcio</div>
+                <div id="shop-skins-calcio" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;"></div>
+                <div style="color:rgba(255,255,255,0.65);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">🎮 Videogiochi</div>
+                <div id="shop-skins-games" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;"></div>
+                <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;">
+                    <div style="display:flex;gap:8px;">
+                        <input id="shop-promo-input" type="text" inputmode="numeric" placeholder="Codice promo" maxlength="4"
+                            style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:14px;text-align:center;letter-spacing:4px;box-sizing:border-box;outline:none;"
+                            onkeydown="if(event.key==='Enter') shopCheckPromoCode(document.getElementById('shop-promo-input').value)">
+                        <button onclick="shopCheckPromoCode(document.getElementById('shop-promo-input').value)"
+                            style="padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;min-width:0;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);">Invia</button>
+                    </div>
+                    <div id="shop-promo-msg" style="text-align:center;font-size:12px;margin-top:8px;min-height:16px;"></div>
+                </div>
+            </div>
+
+            <!-- Pannello Guardaroba -->
+            <div id="collezione-wardrobe-pane" style="display:none;">
+                <p id="wardrobe-subtitle" style="color:rgba(255,255,255,0.6);font-size:12px;text-align:center;margin-bottom:12px;"></p>
+                <div id="wardrobe-filter" style="margin-bottom:14px;"></div>
+                <div id="wardrobe-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"></div>
             </div>
         </div>
     </div>

@@ -117,6 +117,7 @@ function setupWelcomeScreen() {
 function openStatsModal() {
     const name = localStorage.getItem('playerName') || 'Giocatore';
     const best = parseInt(localStorage.getItem('bestScore') || '0');
+    const globalBest = JSON.parse(localStorage.getItem('globalBest') || 'null');
     const stats = loadAllStats();
 
     const played = stats.gamesPlayed || 0;
@@ -146,6 +147,12 @@ function openStatsModal() {
     ).join('');
 
     document.getElementById('stats-content').innerHTML = `
+        ${globalBest ? `
+        <div style="background:linear-gradient(135deg,rgba(255,215,0,0.18),rgba(255,140,0,0.1));border:1px solid rgba(255,215,0,0.4);border-radius:14px;padding:14px 18px;text-align:center;margin-bottom:20px;">
+            <div style="color:rgba(255,255,255,0.55);font-size:9px;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:6px;">🏆 Record assoluto</div>
+            <div style="color:#ffd700;font-size:28px;font-weight:900;">${globalBest.score.toLocaleString()}</div>
+            <div style="color:rgba(255,255,255,0.8);font-size:13px;font-weight:600;margin-top:3px;">${globalBest.name}</div>
+        </div>` : ''}
         <div style="text-align:center;margin-bottom:20px;">
             <div style="font-size:36px;margin-bottom:4px;">👤</div>
             <div style="color:white;font-size:20px;font-weight:800;">${name}</div>
@@ -506,6 +513,12 @@ function gameOver() {
     if (isNewRecord) {
         bestScore = score;
         localStorage.setItem('bestScore', bestScore);
+    }
+
+    // Record assoluto tra tutti i giocatori su questo dispositivo
+    const globalBest = JSON.parse(localStorage.getItem('globalBest') || 'null');
+    if (!globalBest || score > globalBest.score) {
+        localStorage.setItem('globalBest', JSON.stringify({ name: playerName, score }));
     }
 
     const message = isNewRecord
