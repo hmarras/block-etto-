@@ -228,6 +228,262 @@
     box-shadow: 0 0 4px rgba(255,255,255,0.8);
 }
 
+/* ── Skin Candy (Candy Crush) ─────────────────────────────────── */
+.cell.filled.skin-candy,
+.piece-cell.skin-candy {
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.45), inset 0 -2px 0 rgba(0,0,0,0.25);
+}
+.cell.filled.skin-candy::before,
+.piece-cell.skin-candy::before {
+    content: '';
+    position: absolute;
+    top: 6%; left: 12%;
+    width: 42%; height: 36%;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.75) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.cell.filled.skin-candy--red,   .piece-cell.skin-candy--red   { background: radial-gradient(circle at 38% 35%, #ff8a8a, #d32f2f 65%, #8b0000); }
+.cell.filled.skin-candy--orange,.piece-cell.skin-candy--orange { background: radial-gradient(circle at 38% 35%, #ffcc80, #e65100 65%, #8a3000); }
+.cell.filled.skin-candy--yellow,.piece-cell.skin-candy--yellow { background: radial-gradient(circle at 38% 35%, #fff59d, #f9a825 65%, #9a6b00); }
+.cell.filled.skin-candy--green, .piece-cell.skin-candy--green  { background: radial-gradient(circle at 38% 35%, #a5d6a7, #388e3c 65%, #1b5e20); }
+.cell.filled.skin-candy--blue,  .piece-cell.skin-candy--blue   { background: radial-gradient(circle at 38% 35%, #90caf9, #1565c0 65%, #0d2d6e); }
+.cell.filled.skin-candy--purple,.piece-cell.skin-candy--purple { background: radial-gradient(circle at 38% 35%, #ce93d8, #7b1fa2 65%, #3c0063); }
+
+/* ── Skin Pixel (Minecraft) ───────────────────────────────────── */
+.cell.filled.skin-pixel,
+.piece-cell.skin-pixel {
+    border-radius: 1px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset -4px -4px 0 rgba(0,0,0,0.45), inset 4px 4px 0 rgba(255,255,255,0.22);
+}
+.cell.filled.skin-pixel::before,
+.piece-cell.skin-pixel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(90deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 2px, transparent 2px, transparent 6px),
+        repeating-linear-gradient(0deg,  rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 2px, transparent 2px, transparent 6px);
+}
+.cell.filled.skin-pixel--dirt, .piece-cell.skin-pixel--dirt { background: #8b5e3c; }
+.cell.filled.skin-pixel--grass,.piece-cell.skin-pixel--grass { background: #5a8a3c; }
+.cell.filled.skin-pixel--stone,.piece-cell.skin-pixel--stone { background: #7d7d7d; }
+.cell.filled.skin-pixel--log,  .piece-cell.skin-pixel--log   { background: #7a5c1e; }
+
+/* ── Skin Mario (Mario Bros) ──────────────────────────────────── */
+.cell.filled.skin-mario,
+.piece-cell.skin-mario {
+    background: #c1440e;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset -3px -3px 0 rgba(0,0,0,0.4), inset 3px 3px 0 rgba(255,255,255,0.18), 0 3px 8px rgba(0,0,0,0.4);
+}
+.cell.filled.skin-mario::before,
+.piece-cell.skin-mario::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 46%;
+    width: 100%; height: 8%;
+    background: rgba(0,0,0,0.32);
+}
+.cell.filled.skin-mario::after,
+.piece-cell.skin-mario::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 46%;
+    left: 47%; width: 6%;
+    background: rgba(0,0,0,0.32);
+}
+
+/* ── Skin Tetris ──────────────────────────────────────────────── */
+.cell.filled.skin-tetris,
+.piece-cell.skin-tetris {
+    border-radius: 2px;
+    position: relative;
+    box-shadow: inset -4px -4px 0 rgba(0,0,0,0.4), inset 4px 4px 0 rgba(255,255,255,0.4), 0 3px 6px rgba(0,0,0,0.35);
+}
+.cell.filled.skin-tetris--cyan,  .piece-cell.skin-tetris--cyan   { background: #00e0e0; }
+.cell.filled.skin-tetris--yellow,.piece-cell.skin-tetris--yellow  { background: #e8e000; }
+.cell.filled.skin-tetris--purple,.piece-cell.skin-tetris--purple  { background: #9800e0; }
+.cell.filled.skin-tetris--green, .piece-cell.skin-tetris--green   { background: #00d000; }
+.cell.filled.skin-tetris--red,   .piece-cell.skin-tetris--red     { background: #e00000; }
+.cell.filled.skin-tetris--blue,  .piece-cell.skin-tetris--blue    { background: #0020d0; }
+.cell.filled.skin-tetris--orange,.piece-cell.skin-tetris--orange  { background: #e09000; }
+
+/* ── Skin Gem (Bejeweled) ─────────────────────────────────────── */
+.cell.filled.skin-gem,
+.piece-cell.skin-gem {
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.5);
+}
+.cell.filled.skin-gem::before,
+.piece-cell.skin-gem::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.38) 0%, transparent 100%);
+    border-radius: 8px 8px 0 0;
+}
+.cell.filled.skin-gem::after,
+.piece-cell.skin-gem::after {
+    content: '';
+    position: absolute;
+    top: 14%; right: 14%;
+    width: 18%; height: 18%;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.75;
+    box-shadow: 0 0 6px rgba(255,255,255,0.9);
+}
+.cell.filled.skin-gem--ruby,    .piece-cell.skin-gem--ruby     { background: radial-gradient(circle at 40% 35%, #ff7b7b, #c0392b 60%, #7b0000); }
+.cell.filled.skin-gem--sapphire,.piece-cell.skin-gem--sapphire { background: radial-gradient(circle at 40% 35%, #74b9ff, #2471a3 60%, #00144d); }
+.cell.filled.skin-gem--emerald, .piece-cell.skin-gem--emerald  { background: radial-gradient(circle at 40% 35%, #58d68d, #1e8449 60%, #004d26); }
+.cell.filled.skin-gem--amethyst,.piece-cell.skin-gem--amethyst { background: radial-gradient(circle at 40% 35%, #d98ef5, #8e44ad 60%, #4a0080); }
+
+/* ── Skin Galaxy (spazio) ─────────────────────────────────────── */
+.cell.filled.skin-galaxy,
+.piece-cell.skin-galaxy {
+    background: radial-gradient(ellipse at 30% 30%, #2d0b4e 0%, #0a001a 50%, #000d2e 100%);
+    border: 1px solid rgba(150,80,255,0.55);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(100,50,255,0.45), inset 0 0 14px rgba(80,0,200,0.2);
+}
+.cell.filled.skin-galaxy::before,
+.piece-cell.skin-galaxy::before {
+    content: '';
+    position: absolute;
+    top: 18%; left: 65%;
+    width: 7%; height: 7%;
+    background: white;
+    border-radius: 50%;
+    box-shadow: -18px 6px 0 -2px white, 4px 22px 0 -3px rgba(255,255,255,0.55), -6px 38px 0 -2px rgba(180,120,255,0.8);
+}
+.cell.filled.skin-galaxy::after,
+.piece-cell.skin-galaxy::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 65%; height: 65%;
+    background: radial-gradient(circle at center, rgba(120,0,255,0.22) 0%, transparent 70%);
+}
+
+/* ── Skin Fire (Diablo) ───────────────────────────────────────── */
+.cell.filled.skin-fire,
+.piece-cell.skin-fire {
+    background: linear-gradient(0deg, #c80000 0%, #ff4500 35%, #ff8c00 70%, #ffd700 100%);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(255,80,0,0.65), 0 0 8px rgba(255,50,0,0.4);
+}
+.cell.filled.skin-fire::before,
+.piece-cell.skin-fire::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 8%;
+    width: 84%; height: 55%;
+    background: radial-gradient(ellipse at center bottom, rgba(255,250,150,0.55) 0%, transparent 70%);
+}
+.cell.filled.skin-fire::after,
+.piece-cell.skin-fire::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 22%;
+    width: 56%; height: 28%;
+    background: radial-gradient(ellipse at center, rgba(255,255,200,0.4) 0%, transparent 70%);
+}
+
+/* ── Skin Ice (Frozen) ────────────────────────────────────────── */
+.cell.filled.skin-ice,
+.piece-cell.skin-ice {
+    background: linear-gradient(135deg, #e8f6ff 0%, #b8dcf8 45%, #78b8e8 100%);
+    border: 1.5px solid rgba(255,255,255,0.75);
+    border-radius: 7px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(100,180,255,0.45), inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(100,160,220,0.4);
+}
+.cell.filled.skin-ice::before,
+.piece-cell.skin-ice::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(128deg, rgba(255,255,255,0.55) 0%, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%, rgba(200,235,255,0.32) 100%);
+}
+.cell.filled.skin-ice::after,
+.piece-cell.skin-ice::after {
+    content: '';
+    position: absolute;
+    top: 12%; left: 14%;
+    width: 22%; height: 22%;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.85;
+    box-shadow: 0 0 8px white;
+}
+
+/* ── Skin Retro (Pac-Man / Arcade) ───────────────────────────── */
+.cell.filled.skin-retro,
+.piece-cell.skin-retro {
+    border-radius: 0;
+    border: 2px solid rgba(0,0,0,0.85);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.65);
+    position: relative;
+}
+.cell.filled.skin-retro::before,
+.piece-cell.skin-retro::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 30%; height: 30%;
+    background: rgba(255,255,255,0.3);
+}
+.cell.filled.skin-retro--red,   .piece-cell.skin-retro--red    { background: #ff2020; }
+.cell.filled.skin-retro--cyan,  .piece-cell.skin-retro--cyan   { background: #00cdcd; }
+.cell.filled.skin-retro--orange,.piece-cell.skin-retro--orange  { background: #ffb820; }
+.cell.filled.skin-retro--pink,  .piece-cell.skin-retro--pink   { background: #ff80c0; }
+
+/* ── Skin Metal (Fortnite / vari) ─────────────────────────────── */
+.cell.filled.skin-metal,
+.piece-cell.skin-metal {
+    background: linear-gradient(155deg, #d0d0d0 0%, #888 38%, #aaa 62%, #666 100%);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset -4px -4px 0 rgba(0,0,0,0.42), inset 4px 4px 0 rgba(255,255,255,0.32), 0 4px 10px rgba(0,0,0,0.5);
+}
+.cell.filled.skin-metal::before,
+.piece-cell.skin-metal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(255,255,255,0.045) 3px,
+        rgba(255,255,255,0.045) 4px
+    );
+}
+.cell.filled.skin-metal::after,
+.piece-cell.skin-metal::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 18%;
+    width: 28%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+}
+
 /* ── Skin Calcio ──────────────────────────────────────────────── */
 .cell.filled.skin-juventus,
 .piece-cell.skin-juventus {

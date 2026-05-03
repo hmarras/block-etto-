@@ -12,6 +12,16 @@ const SKIN_CATALOG = [
     { key: 'milan',    name: 'Milan',     price: 1500, section: 'calcio', emoji: '⚽' },
     { key: 'inter',    name: 'Inter',     price: 1500, section: 'calcio', emoji: '⚽' },
     { key: 'napoli',   name: 'Napoli',    price: 1500, section: 'calcio', emoji: '⚽' },
+    { key: 'retro',   name: 'Retro',      price: 1600, section: 'games',  emoji: '👾' },
+    { key: 'candy',   name: 'Candy',      price: 1800, section: 'games',  emoji: '🍬' },
+    { key: 'mario',   name: 'Mario',      price: 1800, section: 'games',  emoji: '🧱' },
+    { key: 'pixel',   name: 'Minecraft',  price: 2000, section: 'games',  emoji: '⛏️' },
+    { key: 'tetris',  name: 'Tetris',     price: 2000, section: 'games',  emoji: '🟦' },
+    { key: 'ice',     name: 'Ice',        price: 2200, section: 'games',  emoji: '❄️' },
+    { key: 'fire',    name: 'Fuoco',      price: 2200, section: 'games',  emoji: '🔥' },
+    { key: 'gem',     name: 'Gem',        price: 2600, section: 'games',  emoji: '💠' },
+    { key: 'metal',   name: 'Metal',      price: 2800, section: 'games',  emoji: '⚙️' },
+    { key: 'galaxy',  name: 'Galaxy',     price: 3200, section: 'games',  emoji: '🌌' },
 ];
 
 // ── Wallet helpers ─────────────────────────────────────────────────────────────
@@ -105,13 +115,24 @@ function shopBuildPreviewCells(key) {
         if (key !== 'classic') classes += ` skin-${key}`;
 
         let extraClass = '';
+        const idx = activeIndices.indexOf(i);
         if (key === 'chess') {
             const row = Math.floor(i / 3), col = i % 3;
             extraClass = (row + col) % 2 === 0 ? 'skin-chess--light' : 'skin-chess--dark';
         } else if (key === 'gift') {
-            extraClass = ['skin-gift--r', 'skin-gift--g', 'skin-gift--b'][activeIndices.indexOf(i)];
+            extraClass = ['skin-gift--r', 'skin-gift--g', 'skin-gift--b'][idx];
         } else if (key === 'neon') {
-            extraClass = ['skin-neon--cyan', 'skin-neon--green', 'skin-neon--magenta'][activeIndices.indexOf(i)];
+            extraClass = ['skin-neon--cyan', 'skin-neon--green', 'skin-neon--magenta'][idx];
+        } else if (key === 'candy') {
+            extraClass = ['skin-candy--red', 'skin-candy--blue', 'skin-candy--yellow'][idx];
+        } else if (key === 'pixel') {
+            extraClass = ['skin-pixel--dirt', 'skin-pixel--grass', 'skin-pixel--stone'][idx];
+        } else if (key === 'tetris') {
+            extraClass = ['skin-tetris--cyan', 'skin-tetris--yellow', 'skin-tetris--orange'][idx];
+        } else if (key === 'gem') {
+            extraClass = ['skin-gem--ruby', 'skin-gem--sapphire', 'skin-gem--emerald'][idx];
+        } else if (key === 'retro') {
+            extraClass = ['skin-retro--red', 'skin-retro--cyan', 'skin-retro--orange'][idx];
         }
 
         if (extraClass) classes += ` ${extraClass}`;
@@ -156,11 +177,13 @@ function shopBuildCard(skin) {
 // ── Render completo shop ───────────────────────────────────────────────────────
 
 function shopRenderCards() {
-    const main = SKIN_CATALOG.filter(s => s.section === 'main');
+    const main   = SKIN_CATALOG.filter(s => s.section === 'main');
     const calcio = SKIN_CATALOG.filter(s => s.section === 'calcio');
+    const games  = SKIN_CATALOG.filter(s => s.section === 'games');
 
     document.getElementById('shop-skins-main').innerHTML   = main.map(shopBuildCard).join('');
     document.getElementById('shop-skins-calcio').innerHTML = calcio.map(shopBuildCard).join('');
+    document.getElementById('shop-skins-games').innerHTML  = games.map(shopBuildCard).join('');
 }
 
 function shopRefreshUI() {

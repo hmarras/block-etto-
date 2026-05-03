@@ -16,7 +16,7 @@
            cache del browser e ricarica prima che qualsiasi altro script giri.
            Aggiornare APP_V ad ogni deploy insieme a CACHE_VERSION in sw.js. */
         (function () {
-            var APP_V = '20260503b';
+            var APP_V = '20260503c';
             if (localStorage.getItem('_bv') !== APP_V) {
                 localStorage.setItem('_bv', APP_V);
                 if ('caches' in window) {
@@ -93,7 +93,9 @@
             <div style="color:rgba(255,255,255,0.65);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">Skin principali</div>
             <div id="shop-skins-main" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;"></div>
             <div style="color:rgba(255,255,255,0.65);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">⚽ Calcio</div>
-            <div id="shop-skins-calcio" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;"></div>
+            <div id="shop-skins-calcio" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;"></div>
+            <div style="color:rgba(255,255,255,0.65);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">🎮 Videogiochi</div>
+            <div id="shop-skins-games" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;"></div>
             <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;">
                 <div style="display:flex;gap:8px;">
                     <input id="shop-promo-input" type="text" inputmode="numeric" placeholder="Codice promo" maxlength="4"

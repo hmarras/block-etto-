@@ -643,6 +643,31 @@ function applySkinToCell(el, skin, row, col, pieceIndex) {
         const i = pieceIndex !== null ? pieceIndex % 3 : (row + col) % 3;
         el.classList.add(['skin-neon--cyan', 'skin-neon--green', 'skin-neon--magenta'][i]);
     }
+    if (skin === 'candy') {
+        const colors = ['skin-candy--red','skin-candy--orange','skin-candy--yellow','skin-candy--green','skin-candy--blue','skin-candy--purple'];
+        const i = pieceIndex !== null ? pieceIndex % 6 : (row + col) % 6;
+        el.classList.add(colors[i]);
+    }
+    if (skin === 'pixel') {
+        const variants = ['skin-pixel--dirt','skin-pixel--grass','skin-pixel--stone','skin-pixel--log'];
+        const i = pieceIndex !== null ? pieceIndex % 4 : (row + col) % 4;
+        el.classList.add(variants[i]);
+    }
+    if (skin === 'tetris') {
+        const colors = ['skin-tetris--cyan','skin-tetris--yellow','skin-tetris--purple','skin-tetris--green','skin-tetris--red','skin-tetris--blue','skin-tetris--orange'];
+        const i = pieceIndex !== null ? pieceIndex % 7 : (row + col) % 7;
+        el.classList.add(colors[i]);
+    }
+    if (skin === 'gem') {
+        const variants = ['skin-gem--ruby','skin-gem--sapphire','skin-gem--emerald','skin-gem--amethyst'];
+        const i = pieceIndex !== null ? pieceIndex % 4 : (row + col) % 4;
+        el.classList.add(variants[i]);
+    }
+    if (skin === 'retro') {
+        const variants = ['skin-retro--red','skin-retro--cyan','skin-retro--orange','skin-retro--pink'];
+        const i = pieceIndex !== null ? pieceIndex % 4 : (row + col) % 4;
+        el.classList.add(variants[i]);
+    }
 }
 
 function earnWalletPoints() {
