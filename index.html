@@ -16,7 +16,7 @@
            cache del browser e ricarica prima che qualsiasi altro script giri.
            Aggiornare APP_V ad ogni deploy insieme a CACHE_VERSION in sw.js. */
         (function () {
-            var APP_V = '20260503';
+            var APP_V = '20260503b';
             if (localStorage.getItem('_bv') !== APP_V) {
                 localStorage.setItem('_bv', APP_V);
                 if ('caches' in window) {
@@ -95,9 +95,13 @@
             <div style="color:rgba(255,255,255,0.65);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">⚽ Calcio</div>
             <div id="shop-skins-calcio" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;"></div>
             <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;">
-                <input id="shop-promo-input" type="number" placeholder="Codice promo" maxlength="4"
-                    style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:14px;text-align:center;letter-spacing:4px;box-sizing:border-box;outline:none;"
-                    oninput="shopCheckPromoCode(this.value)">
+                <div style="display:flex;gap:8px;">
+                    <input id="shop-promo-input" type="text" inputmode="numeric" placeholder="Codice promo" maxlength="4"
+                        style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:14px;text-align:center;letter-spacing:4px;box-sizing:border-box;outline:none;"
+                        onkeydown="if(event.key==='Enter') shopCheckPromoCode(document.getElementById('shop-promo-input').value)">
+                    <button onclick="shopCheckPromoCode(document.getElementById('shop-promo-input').value)"
+                        style="padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;min-width:0;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);">Invia</button>
+                </div>
                 <div id="shop-promo-msg" style="text-align:center;font-size:12px;margin-top:8px;min-height:16px;"></div>
             </div>
         </div>

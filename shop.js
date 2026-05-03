@@ -410,17 +410,23 @@ function showEngagementNotice(containerId, compact = false) {
 // ── Codice promo segreto ───────────────────────────────────────────────────────
 
 function shopCheckPromoCode(value) {
-    if (value.toString() !== '7556') return;
-    SKIN_CATALOG.forEach(s => shopAddOwned(s.key));
-    shopRefreshUI();
-    wardrobeRender();
     const msg = document.getElementById('shop-promo-msg');
-    if (msg) {
-        msg.innerHTML = '<span style="color:#ffd700;font-weight:800;">🎉 Tutte le skin sbloccate!</span>';
-        setTimeout(() => { msg.innerHTML = ''; }, 3000);
-    }
     const input = document.getElementById('shop-promo-input');
-    if (input) input.value = '';
+    if (value.trim() === '7556') {
+        SKIN_CATALOG.forEach(s => shopAddOwned(s.key));
+        shopRefreshUI();
+        wardrobeRender();
+        if (msg) {
+            msg.innerHTML = '<span style="color:#ffd700;font-weight:800;">🎉 Tutte le skin sbloccate!</span>';
+            setTimeout(() => { msg.innerHTML = ''; }, 3000);
+        }
+        if (input) input.value = '';
+    } else {
+        if (msg) {
+            msg.innerHTML = '<span style="color:#ff8a8a;font-weight:600;">Codice non valido</span>';
+            setTimeout(() => { msg.innerHTML = ''; }, 2000);
+        }
+    }
 }
 
 // ── Setup event listeners ──────────────────────────────────────────────────────
