@@ -34,14 +34,14 @@ Supporta single player e multiplayer online (WebSocket su Render.com).
 ├── game.js                 # Logica di gioco + statistiche localStorage
 ├── multiplayer.js          # Client WebSocket multiplayer
 ├── multiplayer_server.py   # Server WebSocket (Render.com)
-├── tutorial.js             # Tutorial interattivo a step
+├── tutorial.js             # Tutorial interattivo a step (10 step)
 ├── requirements.txt        # websockets==12.0
 ├── manifest.json           # PWA manifest (nome, icone, colori)
 ├── apple-touch-icon.png    # 180x180 per iOS
 ├── icon-192.png            # 192x192 per Android
 ├── icon-512.png            # 512x512 alta risoluzione
 ├── shop.js                 # Logica shop, wallet, guardaroba, skin, engagement
-├── skins.css               # CSS delle 11 skin (Classic, Scacchi, Legno, Regali, Neon, Lego, Cristallo, 4 calcio)
+├── skins.css               # CSS delle 21 skin (Classic, Scacchi, Legno, Regali, Neon, Lego, Cristallo, 4 calcio, 10 videogiochi)
 ├── sw.js                   # Service worker per cache management e aggiornamento automatico
 ├── mockup-skins.html       # Pagina di riferimento visivo delle skin (standalone, no deploy necessario)
 ├── create_icon.py          # Script Python per rigenerare le icone (PIL)
@@ -68,12 +68,38 @@ let bestScore = 0;
 let playerName = '';
 let linesCleared = 0;       // Contatore linee nella partita corrente
 let gameStartTime = null;   // Timestamp inizio partita
+let activeSkin = 'classic';
+
+// PRO Mode (non persistito in localStorage — reset ad ogni sessione)
+let proMode = false;        // Attivato dal pulsante welcome screen
+let proTimeLeft = 5;        // Secondi rimasti nel timer corrente
+let proTimerInterval = null;
+let proTotalBonus = 0;      // Bonus velocità accumulato nella partita
 ```
 
 ### Punteggio
 - **10 pt** per blocco piazzato
 - **100 pt** per riga/colonna completata
 - **Bonus combo**: `totalLines * 50` se più linee simultanee
+- **PRO bonus**: `proTimeLeft × 20` pt per ogni piazzamento (max +100 per piazzamento istantaneo)
+
+### Modalità PRO
+Attivabile dalla welcome screen con il pulsante "⚡ Modalità PRO". Non viene salvata in localStorage (si resetta ad ogni visita).
+
+**Flusso timer:**
+1. `initGame()` chiama `startProTimer()` se proMode attivo
+2. Alla pressione di una cella valida: `pauseProTimer()` → bonus calcolato da `proTimeLeft` → `await clearLines()` → `startProTimer()` (riparte a 5s)
+3. Timer a 0 → `gameOver()` immediato
+4. `gameOver()` chiama sempre `stopProTimer()` (nasconde la barra)
+
+**Funzioni:**
+- `toggleProMode()` — toggle + aggiorna stile pulsante
+- `startProTimer()` — reset a 5s, avvia interval, mostra `#pro-timer-bar`
+- `pauseProTimer()` — clearInterval senza nascondere la barra (usato durante animazione line clear)
+- `stopProTimer()` — clearInterval + nasconde la barra
+- `updateProTimerUI()` — aggiorna count e fill (rosso se ≤2s, giallo altrimenti)
+
+**HTML:** `#pro-timer-bar` (tra header e griglia), `#pro-toggle-btn` (welcome screen)
 
 ### Animazione line clearing
 **IMPORTANTE:** non chiamare `render()` tra l'aggiunta della classe `.clearing` e l'`await`, altrimenti il DOM viene ricreato e l'animazione non parte.
@@ -134,6 +160,7 @@ const GAME_URL = window.location.hostname === 'localhost'
 | Client → Server | `score_update` | Aggiorna punteggio in tempo reale |
 | Client → Server | `game_over` | Fine partita, invia score finale |
 | Client → Server | `rematch_request` | Richiede rivincita |
+| Client → Server | `emoji` | Invia emoji all'avversario (campo `emoji`) |
 | Server → Client | `room_created` | Codice stanza assegnato |
 | Server → Client | `opponent_joined` | L'avversario è entrato |
 | Server → Client | `game_start` | Inizia partita (o rivincita) |
@@ -141,7 +168,17 @@ const GAME_URL = window.location.hostname === 'localhost'
 | Server → Client | `opponent_game_over` | L'avversario ha finito |
 | Server → Client | `result` | Risultati finali (you_won, draw, scores) |
 | Server → Client | `rematch_requested` | L'avversario vuole rivincita |
+| Server → Client | `opponent_emoji` | Emoji ricevuta dall'avversario |
 | Server → Client | `opponent_disconnected` | L'avversario si è disconnesso |
+
+### Emoji Reactions
+Durante una partita MP, viene mostrato un tray (`#emoji-tray`) con 6 emoji: 😜 👊 🔥 💀 👏 😂.
+
+- `MP.sendEmoji(emoji)` — invia via WS e mostra reazione locale
+- `showEmojiReaction(emoji, isMine)` — anima un elemento `.emoji-float` che sale e svanisce
+  - `isMine=true`: parte dall'emoji tray (reazione del mittente)
+  - `isMine=false`: parte dalla barra avversario (reazione ricevuta)
+- Il tray è visibile solo durante `MP.active === true` (mostrato in `startMultiplayerGame()`, nascosto in `showDisconnected()`, `mp-result-again`, `mp-leave-button`)
 
 ### Schema stanza server
 ```python
@@ -162,6 +199,25 @@ Quando entrambi cliccano "Rivincita", il server chiama `reset_room()` (azzera sc
 
 ### QR Code
 Generato client-side con la libreria `qrcodejs` (CDN jsdelivr). Punta a `GAME_URL?room=XXXX`.
+
+---
+
+## Tutorial (`tutorial.js`)
+
+10 step interattivi. Array `tutorialSteps` con `title`, `content` (HTML), `visual` (funzione → stringa HTML).
+
+| # | Titolo |
+|---|---|
+| 1 | Benvenuto in Block-etto! 🎮 |
+| 2 | La Griglia 8×8 |
+| 3 | I 3 Pezzi |
+| 4 | Come Piazzare i Blocchi |
+| 5 | Completa Righe e Colonne |
+| 6 | Sistema di Punteggio 🏆 |
+| 7 | Monete e Collezione 🎨 |
+| 8 | Sfida un Amico ⚔️ |
+| 9 | Game Over |
+| 10 | Pronto a Giocare! 🚀 |
 
 ---
 
@@ -197,6 +253,7 @@ Gestisce la cache e forza il reload automatico su tutti i client (incluse PWA su
 {
   playerName: string,       // Nome giocatore
   bestScore: number,        // Record personale
+  globalBest: { name, score }, // Record assoluto tra tutti i giocatori su device (JSON)
   colorTheme: string,       // 'purple'|'pink'|'blue'|'green'|'orange'|'dark'
   playerStats: {            // JSON stringificato
     gamesPlayed: number,
@@ -220,7 +277,10 @@ Gestisce la cache e forza il reload automatico su tutti i client (incluse PWA su
 Moltiplicatori promo basati su `gamesPlayed`:
 - Partite 1–5: ×5 | 6–10: ×3 | 11–20: ×2 | 21+: ×1
 
-**Prezzi skin:** Classic 0pt · Scacchi 300 · Legno 450 · Regali 600 · Neon 750 · Lego 950 · Cristallo 1200 · Calcio 1500
+**Sezioni skin (21 totali):**
+- `main`: Classic (0), Scacchi (300), Legno (450), Regali (600), Neon (750), Lego (950), Cristallo (1200)
+- `calcio`: 4 skin (1500 ciascuna)
+- `games`: 10 skin videogiochi
 
 **Skin con varianti posizionali** (applicate da `applySkinToCell()` in `game.js`):
 - `chess`: `--light` / `--dark` alternati per (row+col) % 2
@@ -230,6 +290,14 @@ Moltiplicatori promo basati su `gamesPlayed`:
 **Skin neon** richiede griglia scura: classe `.skin-neon-active` su `#grid` e `#pieces` (togglata in `renderGrid()` e `renderPieces()`).
 
 **CustomEvent `skinChanged`**: dispatchato da `shopSetActive()`, ascoltato in `game.js` DOMContentLoaded per aggiornare `activeSkin` senza ricaricare.
+
+### Collezione Modal (`shop.js`)
+Il modal `#shop-modal` contiene due tab: 🛍️ Shop e 👕 Guardaroba.
+
+- `openCollezioneModal(tab)` — apre il modal sul tab specificato
+- `switchCollezioneTab(tab)` — cambia tab visibile
+- `wardrobeRender()` — renderizza il guardaroba con dropdown filtro per sezione (`_wardrobeSection`)
+- Alias legacy: `openShopModal()`, `openWardrobeModal()`, `closeShopModal()`
 
 ---
 
@@ -244,17 +312,30 @@ Ogni tema ha colori blocchi complementari allo sfondo. Salvato in localStorage.
 
 ---
 
+## Responsiveness
+
+Layout mobile-first. Breakpoint principale `max-width: 480px`:
+- `.header`: font-size 13px, padding ridotto (evita wrap a 2 righe per stat)
+- `#grid`: margin/padding ridotti
+- `#pieces`: padding 12px, gap 6px
+- `.piece-container`: padding 8px
+- `.piece-cell`: 16px (default 24px, desktop 28px) — garantisce che pezzi 1×4 entrino nel container
+
+---
+
 ## Deploy
 
 ### GitHub Pages (frontend)
 
 **IMPORTANTE — Prima di ogni push, Claude deve aggiornare in automatico queste 3 cose:**
 
-1. `sw.js` → incrementare `CACHE_VERSION` (es. `'v3'` → `'v4'`)
+1. `sw.js` → incrementare `CACHE_VERSION` (es. `'v7'` → `'v8'`)
 2. `index.html` → aggiornare `APP_V` con la data odierna in formato `'YYYYMMDD'` (es. `'20260503'`)
 3. `index.html` → aggiornare la stringa visibile in fondo alla welcome screen con data e orario del commit (es. `v 3 maggio 2026 · 14:32`)
 
 Per l'orario usare l'output di `git log -1 --format="%ci"` dopo il commit, oppure l'orario corrente al momento del push.
+
+**IMPORTANTE — Non fare `git push` senza che l'utente abbia esplicitamente chiesto il deploy.**
 
 ```bash
 cd "/Users/hmarras/Documents/Personale/Progetti/Block etto"
@@ -282,6 +363,8 @@ git push origin main
 - `MP.active` è `true` solo durante una partita multiplayer in corso
 - `saveGameStats()` è chiamata in `gameOver()` anche in modalità multiplayer (prima del check MP)
 - Il risultato multiplayer (`showMPResult`) chiama anche `saveMPResult()` per tracciare vittorie/sconfitte
+- `#emoji-tray` è visibile solo quando `MP.active === true`; `#pro-timer-bar` solo quando `proMode === true`
+- Il timer PRO usa `pauseProTimer()` (non `stopProTimer()`) durante `clearLines()` per non nascondere la barra durante l'animazione
 
 ---
 
