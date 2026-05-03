@@ -93,7 +93,13 @@
             <div style="color:rgba(255,255,255,0.65);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">Skin principali</div>
             <div id="shop-skins-main" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;"></div>
             <div style="color:rgba(255,255,255,0.65);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">⚽ Calcio</div>
-            <div id="shop-skins-calcio" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
+            <div id="shop-skins-calcio" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;"></div>
+            <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;">
+                <input id="shop-promo-input" type="number" placeholder="Codice promo" maxlength="4"
+                    style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-size:14px;text-align:center;letter-spacing:4px;box-sizing:border-box;outline:none;"
+                    oninput="shopCheckPromoCode(this.value)">
+                <div id="shop-promo-msg" style="text-align:center;font-size:12px;margin-top:8px;min-height:16px;"></div>
+            </div>
         </div>
     </div>
 
