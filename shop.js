@@ -22,6 +22,7 @@ const SKIN_CATALOG = [
     { key: 'gem',     name: 'Gem',        price: 2600, section: 'games',  emoji: '💠' },
     { key: 'metal',   name: 'Metal',      price: 2800, section: 'games',  emoji: '⚙️' },
     { key: 'galaxy',  name: 'Galaxy',     price: 3200, section: 'games',  emoji: '🌌' },
+    { key: 'paradise', name: 'Paradiso',  price: 0,    section: 'pass',   emoji: '☁️' },
 ];
 
 // ── Wallet helpers ─────────────────────────────────────────────────────────────
@@ -245,6 +246,7 @@ const WARDROBE_SECTIONS = [
     { key: 'main',   label: '⭐ Principali' },
     { key: 'calcio', label: '⚽ Calcio' },
     { key: 'games',  label: '🎮 Videogiochi' },
+    { key: 'pass',   label: '☁️ Block Pass' },
 ];
 
 let _wardrobeSection = 'all';
@@ -295,7 +297,8 @@ function wardrobeRender() {
         if (!skin) return '';
         const isActive = active === key;
         const isNeon = key === 'neon';
-        const previewBg = isNeon ? '#0a0a12' : 'rgba(0,0,0,0.32)';
+        const isParadise = key === 'paradise';
+        const previewBg = isParadise ? 'rgba(135,206,235,0.2)' : (isNeon ? '#0a0a12' : 'rgba(0,0,0,0.32)');
         const cardBorder = isActive ? '2px solid rgba(255,255,255,0.85)' : '1px solid rgba(255,255,255,0.18)';
         const cardBg = isActive ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.1)';
         const btn = isActive
@@ -343,24 +346,37 @@ function closeCollezioneModal() {
 function switchCollezioneTab(tab) {
     const shopPane     = document.getElementById('collezione-shop-pane');
     const wardrobePane = document.getElementById('collezione-wardrobe-pane');
+    const potionsPane  = document.getElementById('collezione-potions-pane');
     const shopBtn      = document.getElementById('tab-shop-btn');
     const wardrobeBtn  = document.getElementById('tab-wardrobe-btn');
+    const potionsBtn   = document.getElementById('tab-potions-btn');
 
-    if (tab === 'shop') {
-        shopPane.style.display     = '';
-        wardrobePane.style.display = 'none';
-        shopBtn.style.background   = 'white';
-        shopBtn.style.color        = '#5a3a9b';
-        wardrobeBtn.style.background = 'transparent';
-        wardrobeBtn.style.color      = 'rgba(255,255,255,0.7)';
-    } else {
+    const resetAll = () => {
         shopPane.style.display     = 'none';
-        wardrobePane.style.display = '';
-        wardrobeBtn.style.background = 'white';
-        wardrobeBtn.style.color      = '#5a3a9b';
+        wardrobePane.style.display = 'none';
+        if (potionsPane) potionsPane.style.display = 'none';
         shopBtn.style.background   = 'transparent';
         shopBtn.style.color        = 'rgba(255,255,255,0.7)';
+        wardrobeBtn.style.background = 'transparent';
+        wardrobeBtn.style.color      = 'rgba(255,255,255,0.7)';
+        if (potionsBtn) { potionsBtn.style.background = 'transparent'; potionsBtn.style.color = 'rgba(255,255,255,0.7)'; }
+    };
+
+    resetAll();
+
+    if (tab === 'shop') {
+        shopPane.style.display   = '';
+        shopBtn.style.background = 'white';
+        shopBtn.style.color      = '#5a3a9b';
+    } else if (tab === 'wardrobe') {
+        wardrobePane.style.display   = '';
+        wardrobeBtn.style.background = 'white';
+        wardrobeBtn.style.color      = '#5a3a9b';
         wardrobeRender();
+    } else if (tab === 'potions') {
+        if (potionsPane) potionsPane.style.display = '';
+        if (potionsBtn) { potionsBtn.style.background = 'white'; potionsBtn.style.color = '#5a3a9b'; }
+        if (typeof potionsRender === 'function') potionsRender();
     }
 }
 

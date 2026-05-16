@@ -122,6 +122,14 @@ function setupWelcomeScreen() {
     document.getElementById('pro-toggle-btn').addEventListener('click', toggleProMode);
 }
 
+function goToMenu() {
+    document.getElementById('game-over-modal').style.display = 'none';
+    document.getElementById('game-screen').style.display = 'none';
+    document.getElementById('welcome-screen').style.display = 'flex';
+    if (typeof showEngagementNotice === 'function') showEngagementNotice('welcome-goal', true);
+    if (typeof bpUpdateWelcomeIndicator === 'function') bpUpdateWelcomeIndicator();
+}
+
 function toggleProMode() {
     proMode = !proMode;
     const btn = document.getElementById('pro-toggle-btn');
@@ -454,7 +462,8 @@ function placePiece(shape, startRow, startCol) {
         }
     }
 
-    score += blocksPlaced * 10;
+    const ptsMult = typeof getActivePointsMultiplier === 'function' ? getActivePointsMultiplier() : 1;
+    score += blocksPlaced * 10 * ptsMult;
 }
 
 async function clearLines() {
@@ -503,9 +512,10 @@ async function clearLines() {
         colsToClear.forEach(c => grid.forEach(row => row[c] = 0));
 
         // Update score
-        score += totalLines * 100;
+        const ptsMult = typeof getActivePointsMultiplier === 'function' ? getActivePointsMultiplier() : 1;
+        score += totalLines * 100 * ptsMult;
         if (totalLines > 1) {
-            score += totalLines * 50; // Combo bonus
+            score += totalLines * 50 * ptsMult; // Combo bonus
         }
         linesCleared += totalLines;
     }
@@ -573,15 +583,20 @@ function gameOver() {
             document.getElementById('piece-stats').innerHTML = '';
             document.getElementById('wallet-earned-notice').innerHTML = '';
             document.getElementById('engagement-notice').innerHTML = '';
+            const bpXpEl = document.getElementById('bp-xp-notice');
+            if (bpXpEl) bpXpEl.innerHTML = '';
             document.getElementById('game-over-modal').style.display = 'flex';
             document.getElementById('play-again-button').style.display = 'none';
+            document.getElementById('go-to-menu-button').style.display = 'none';
             document.getElementById('mp-leave-button').style.display = '';
             return;
         }
     }
 
     saveGameStats();
+    if (typeof blockPassAddXP === 'function') blockPassAddXP(score, linesCleared);
     document.getElementById('mp-leave-button').style.display = 'none';
+    document.getElementById('go-to-menu-button').style.display = '';
     const { earned, multiplier } = earnWalletPoints();
 
     document.getElementById('play-again-button').style.display = '';
@@ -766,7 +781,8 @@ function earnWalletPoints() {
     const gamesPlayed = stats.gamesPlayed || 1;
     const multiplier = gamesPlayed <= 5 ? 5 : gamesPlayed <= 10 ? 3 : gamesPlayed <= 20 ? 2 : 1;
     const base = Math.floor(score / 30);
-    const earned = base * multiplier;
+    const moneyMult = typeof getActiveMoneyMultiplier === 'function' ? getActiveMoneyMultiplier() : 1;
+    const earned = base * multiplier * moneyMult;
     const current = parseInt(localStorage.getItem('walletPoints') || '0');
     localStorage.setItem('walletPoints', current + earned);
     return { earned, multiplier };

@@ -325,6 +325,9 @@ button:active {
     border-radius: 24px;
     text-align: center;
     max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-sizing: border-box;
     box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     animation: slideUp 0.4s ease;
 }
@@ -412,6 +415,19 @@ button:active {
     .piece-cell {
         width: 16px;
         height: 16px;
+    }
+
+    .modal-content {
+        padding: 28px 18px;
+        max-width: 94%;
+        max-height: 88vh;
+    }
+
+    .modal-content button {
+        width: 100%;
+        min-width: 0;
+        padding: 14px 16px;
+        font-size: 15px;
     }
 }
 
