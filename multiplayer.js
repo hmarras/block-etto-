@@ -285,6 +285,43 @@ function showMPResult(msg) {
 
     saveMPResult(msg.you_won, msg.draw);
 
+    // Salva stats, aggiorna record, eroga monete e XP Block Pass
+    if (typeof saveGameStats === 'function') saveGameStats();
+
+    if (typeof bestScore !== 'undefined' && typeof score !== 'undefined' && score > bestScore) {
+        bestScore = score;
+        localStorage.setItem('bestScore', bestScore);
+    }
+    const globalBest = JSON.parse(localStorage.getItem('globalBest') || 'null');
+    if (typeof score !== 'undefined' && typeof playerName !== 'undefined') {
+        if (!globalBest || score > globalBest.score) {
+            localStorage.setItem('globalBest', JSON.stringify({ name: playerName, score }));
+        }
+    }
+
+    let earned = 0;
+    if (typeof earnWalletPoints === 'function') {
+        ({ earned } = earnWalletPoints());
+    }
+
+    const bpGained = (typeof score !== 'undefined' && typeof linesCleared !== 'undefined')
+        ? Math.floor(score / 50) + linesCleared * 5 : 0;
+    if (typeof blockPassAddXP === 'function') blockPassAddXP(score, linesCleared);
+
+    // Mostra ricompense nel modal risultato
+    const rewardsEl = document.getElementById('mp-result-rewards');
+    if (rewardsEl) {
+        if (earned > 0 || bpGained > 0) {
+            rewardsEl.innerHTML = `
+                <div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:14px;padding:12px 16px;display:flex;justify-content:center;gap:20px;">
+                    ${earned > 0 ? `<span style="color:#ffd700;font-weight:800;font-size:14px;">🪙 +${earned.toLocaleString()}</span>` : ''}
+                    ${bpGained > 0 ? `<span style="color:#7dd3fc;font-weight:800;font-size:14px;">☁️ +${bpGained} XP</span>` : ''}
+                </div>`;
+        } else {
+            rewardsEl.innerHTML = '';
+        }
+    }
+
     const modal = document.getElementById('mp-result-modal');
 
     if (msg.draw) {

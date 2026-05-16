@@ -589,8 +589,9 @@ function gameOver() {
             document.getElementById('play-again-button').style.display = 'none';
             document.getElementById('go-to-menu-button').style.display = 'none';
             document.getElementById('mp-leave-button').style.display = '';
-            return;
         }
+        // Stats, XP e monete vengono sempre salvati in showMPResult() per le partite MP
+        return;
     }
 
     saveGameStats();
