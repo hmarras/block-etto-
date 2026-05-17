@@ -1,16 +1,21 @@
 // ── Block Pass: livelli e ricompense ──────────────────────────────────────────
 
 const BP_LEVELS = [
-    { xp: 100,  reward: { type: 'coins',  amount: 50,  label: '50 🪙' } },
-    { xp: 250,  reward: { type: 'potion', kind: 'points', multiplier: 1.5, emoji: '🫧', name: 'Pozione Punti', effect: '×1.5 punti', duration: 15 } },
-    { xp: 450,  reward: { type: 'coins',  amount: 150, label: '150 🪙' } },
-    { xp: 700,  reward: { type: 'potion', kind: 'money',  multiplier: 2,   emoji: '✨', name: 'Pozione Soldi', effect: '×2 monete',  duration: 15 } },
-    { xp: 1000, reward: { type: 'coins',  amount: 300, label: '300 🪙' } },
-    { xp: 1350, reward: { type: 'potion', kind: 'points', multiplier: 2,   emoji: '🫧', name: 'Pozione Punti', effect: '×2 punti',   duration: 30 } },
-    { xp: 1750, reward: { type: 'coins',  amount: 500, label: '500 🪙' } },
-    { xp: 2200, reward: { type: 'potion', kind: 'money',  multiplier: 3,   emoji: '✨', name: 'Pozione Soldi', effect: '×3 monete',  duration: 30 } },
-    { xp: 2700, reward: { type: 'coins',  amount: 750, label: '750 🪙' } },
-    { xp: 3300, reward: { type: 'skin',   key: 'paradise',     label: 'Skin ☁️ Paradiso' } },
+    { xp: 200,   reward: { type: 'coins',  amount: 75,   label: '75 🪙' } },
+    { xp: 500,   reward: { type: 'potion', kind: 'points', multiplier: 1.5, emoji: '🫧', name: 'Pozione Punti', effect: '×1.5 punti', duration: 15 } },
+    { xp: 900,   reward: { type: 'coins',  amount: 200,  label: '200 🪙' } },
+    { xp: 1400,  reward: { type: 'potion', kind: 'money',  multiplier: 2,   emoji: '✨', name: 'Pozione Soldi', effect: '×2 monete',  duration: 15 } },
+    { xp: 2000,  reward: { type: 'coins',  amount: 400,  label: '400 🪙' } },
+    { xp: 2700,  reward: { type: 'potion', kind: 'points', multiplier: 2,   emoji: '🫧', name: 'Pozione Punti', effect: '×2 punti',   duration: 30 } },
+    { xp: 3500,  reward: { type: 'coins',  amount: 600,  label: '600 🪙' } },
+    { xp: 4400,  reward: { type: 'potion', kind: 'money',  multiplier: 2,   emoji: '✨', name: 'Pozione Soldi', effect: '×2 monete',  duration: 30 } },
+    { xp: 5400,  reward: { type: 'coins',  amount: 900,  label: '900 🪙' } },
+    { xp: 6600,  reward: { type: 'potion', kind: 'points', multiplier: 2.5, emoji: '🫧', name: 'Pozione Punti', effect: '×2.5 punti', duration: 30 } },
+    { xp: 8000,  reward: { type: 'coins',  amount: 1200, label: '1200 🪙' } },
+    { xp: 9600,  reward: { type: 'potion', kind: 'money',  multiplier: 3,   emoji: '✨', name: 'Pozione Soldi', effect: '×3 monete',  duration: 30 } },
+    { xp: 11400, reward: { type: 'coins',  amount: 1500, label: '1500 🪙' } },
+    { xp: 13400, reward: { type: 'potion', kind: 'points', multiplier: 3,   emoji: '🫧', name: 'Pozione Punti', effect: '×3 punti',   duration: 45 } },
+    { xp: 15600, reward: { type: 'skin',   key: 'paradise', label: 'Skin ☁️ Paradiso' } },
 ];
 
 // ── LocalStorage helpers: Block Pass ─────────────────────────────────────────
@@ -144,7 +149,7 @@ function blockPassAddXP(score, linesCleared) {
         <div style="background:rgba(135,206,235,0.12);border:1px solid rgba(135,206,235,0.25);border-radius:14px;padding:14px 18px;margin:10px 0;text-align:center;">
             <div style="color:rgba(255,255,255,0.8);font-size:12px;margin-bottom:4px;">☁️ Block Pass</div>
             <div style="color:#7dd3fc;font-size:20px;font-weight:900;">+${gained} XP</div>
-            <div style="color:rgba(255,255,255,0.65);font-size:11px;margin-top:4px;">Livello ${newLevel}/10 · ${bpGetXP().toLocaleString()} XP totali</div>`;
+            <div style="color:rgba(255,255,255,0.65);font-size:11px;margin-top:4px;">Livello ${newLevel}/${BP_LEVELS.length} · ${bpGetXP().toLocaleString()} XP totali</div>`;
 
     if (unclaimed > 0) {
         html += `<div style="margin-top:8px;"><button onclick="openBlockPassModal()" style="background:linear-gradient(135deg,#fbbf24,#fde68a);border:none;color:#78350f;font-size:12px;font-weight:800;padding:6px 16px;border-radius:10px;cursor:pointer;">🎁 ${unclaimed} ${unclaimed === 1 ? 'ricompensa' : 'ricompense'} da riscattare!</button></div>`;
@@ -203,7 +208,7 @@ function bpRenderModal() {
     const maxXP = BP_LEVELS[BP_LEVELS.length - 1].xp;
 
     let xpBarPct, xpBarLabel;
-    if (currentLv >= 10) {
+    if (currentLv >= BP_LEVELS.length) {
         xpBarPct = 100;
         xpBarLabel = `${xp.toLocaleString()} XP · Livello massimo!`;
     } else {
@@ -257,7 +262,7 @@ function bpRenderModal() {
         <div style="text-align:center;margin-bottom:20px;">
             <div style="font-size:32px;">☁️✨</div>
             <div style="color:white;font-size:20px;font-weight:900;margin-top:6px;">Block Pass</div>
-            <div style="color:rgba(255,255,255,0.75);font-size:13px;margin-top:2px;">Livello ${currentLv}/10</div>
+            <div style="color:rgba(255,255,255,0.75);font-size:13px;margin-top:2px;">Livello ${currentLv}/${BP_LEVELS.length}</div>
         </div>
 
         <div style="margin-bottom:20px;">
@@ -352,7 +357,7 @@ function bpUpdateWelcomeIndicator() {
     if (unclaimed > 0) {
         btn.textContent = `☁️ Block Pass · ${unclaimed} 🎁`;
     } else {
-        btn.textContent = `☁️ Block Pass · Lv.${lv}/10`;
+        btn.textContent = `☁️ Block Pass · Lv.${lv}/${BP_LEVELS.length}`;
     }
 }
 

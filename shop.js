@@ -528,11 +528,11 @@ function shopCheckPromoCode(value) {
     const msg = document.getElementById('shop-promo-msg');
     const input = document.getElementById('shop-promo-input');
     if (value.trim() === '7556') {
-        SKIN_CATALOG.forEach(s => shopAddOwned(s.key));
+        SKIN_CATALOG.filter(s => s.section !== 'pass').forEach(s => shopAddOwned(s.key));
         shopRefreshUI();
         wardrobeRender();
         if (msg) {
-            msg.innerHTML = '<span style="color:#ffd700;font-weight:800;">🎉 Tutte le skin sbloccate!</span>';
+            msg.innerHTML = '<span style="color:#ffd700;font-weight:800;">🎉 Tutte le skin dello shop sbloccate!</span>';
             setTimeout(() => { msg.innerHTML = ''; }, 3000);
         }
         if (input) input.value = '';
